@@ -2,10 +2,10 @@ package com.example.intervaltimer.ui.theme
 
 import androidx.compose.ui.graphics.Color
 
-val Purple80 = Color(0xFFD0BCFF)
-val PurpleGrey80 = Color(0xFFCCC2DC)
-val Pink80 = Color(0xFFEFB8C8)
+val Blue50 = Color(0xFF4169E1)
+val Blue80 = Color(0xFF1D44B8)
+val Blue20 = Color(0xFF839DEB)
 
-val Purple40 = Color(0xFF6650a4)
-val PurpleGrey40 = Color(0xFF625b71)
-val Pink40 = Color(0xFF7D5260)
+val Red = Color(0xFFE14169)
+val Yellow = Color(0xFFE1B941)
+val Green = Color(0xFF41E1B9)
