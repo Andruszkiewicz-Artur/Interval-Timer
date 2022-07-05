@@ -37,43 +37,48 @@ fun Timer(
     var isWork by remember { mutableStateOf(true) }
     var time by remember { mutableStateOf(timer.startTime) }
     var option by remember { mutableStateOf<Option?>(Option.Start_Time) }
+    var delay by remember { mutableStateOf(0) }
 
-    LaunchedEffect(key1 = time, key2 = isWork) {
+    LaunchedEffect(key1 = delay, key2 = isWork) {
         if(isWork) {
 
-            delay(1000L)
-            time--
+            delay(100L)
+            delay++
 
-            if(option == Option.Round_Time && time == 10) {
-                playAudio(context, bell_soon)
-            } else if(time == 0 && option == Option.Round_Time && rounds > 1) {
-                playAudio(context, bell_finish)
-            }
+            if(delay == 10) {
+                delay = 0
+                time--
 
-            if(time == 0 && rounds != 0) {
-                when(option) {
-                    Option.Start_Time -> {
-                        option = Option.Round_Time
-                        time = timer.roundTime
-                    }
-                    Option.Round_Time -> {
-                        rounds--
-                        option = Option.Delay
-                        if(rounds != 0) {
-                            time = timer.delay
-                        } else {
-                            time = 1
+                if(option == Option.Round_Time && time == 10) {
+                    playAudio(context, bell_soon)
+                } else if(time == 0 && option == Option.Round_Time && rounds > 1) {
+                    playAudio(context, bell_finish)
+                }
+
+                if(time == 0 && rounds > 0) {
+                    when(option) {
+                        Option.Start_Time -> {
+                            option = Option.Round_Time
+                            time = timer.roundTime
+                        }
+                        Option.Round_Time -> {
+                            rounds--
+                            option = Option.Delay
+                            if(rounds != 0) {
+                                time = timer.delay
+                            }
+                        }
+                        Option.Delay -> {
+                            option = Option.Round_Time
+                            time = timer.roundTime
                         }
                     }
-                    Option.Delay -> {
-                        option = Option.Round_Time
-                        time = timer.roundTime
-                    }
                 }
-            } else if(rounds == 0 && time == 0) {
-                isWork = false
-                option = null
-                playAudio(context, gong)
+
+                if(rounds == 0 && time <= 0) {
+                    playAudio(context, gong)
+                    navHostController.popBackStack()
+                }
             }
         }
     }
@@ -112,7 +117,7 @@ fun Timer(
                     .size(100.dp)
                     .clickable {
                         isWork = !isWork
-                        if(option == null) {
+                        if (option == null) {
                             time = timer.startTime
                             option = Option.Start_Time
                             rounds = timer.rounds
@@ -121,7 +126,11 @@ fun Timer(
             )
             Spacer(modifier = Modifier.height(20.dp))
             Text(
-                text = "Rounds: $rounds"
+                text = if(option == Option.Start_Time) {
+                    "Prepare to Exercises!"
+                } else {
+                    "Rounds to finish: ${if(rounds - 1 < 0) 0 else rounds - 1}"
+                }
             )
             Spacer(modifier = Modifier.height(20.dp))
             Text(

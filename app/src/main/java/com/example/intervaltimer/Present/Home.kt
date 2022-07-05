@@ -26,11 +26,11 @@ fun Home(
     navHostController: NavHostController
 ) {
     var startTimeMin by remember { mutableStateOf(0) }
-    var startTimeSec by remember { mutableStateOf(5) }
-    var roundMin by remember { mutableStateOf(0) }
-    var roundSec by remember { mutableStateOf(15) }
-    var delayMin by remember { mutableStateOf(0) }
-    var delaySec by remember { mutableStateOf(10) }
+    var startTimeSec by remember { mutableStateOf(15) }
+    var roundMin by remember { mutableStateOf(3) }
+    var roundSec by remember { mutableStateOf(0) }
+    var delayMin by remember { mutableStateOf(1) }
+    var delaySec by remember { mutableStateOf(0) }
     var rounds by remember { mutableStateOf(5) }
     var option by remember { mutableStateOf<Option?>(null) }
 
@@ -62,7 +62,7 @@ fun Home(
             )
             Spacer(modifier = Modifier.height(20.dp))
             Text(
-                text = "Start Time"
+                text = "Time to prepare"
             )
             Text(
                 text = "$startTimeMin:${if(startTimeSec < 10) "0" + startTimeSec else startTimeSec}",
@@ -84,7 +84,7 @@ fun Home(
             )
             Spacer(modifier = Modifier.height(20.dp))
             Text(
-                text = "Delay Time"
+                text = "Break Time"
             )
             Text(
                 text = "$delayMin:${if(delaySec < 10) "0" + delaySec else delaySec}",
