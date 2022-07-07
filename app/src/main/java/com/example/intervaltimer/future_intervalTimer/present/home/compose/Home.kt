@@ -15,9 +15,9 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
-import com.example.intervaltimer.future_intervalTimer.domain.model.Option
+import com.example.intervaltimer.core.enums.Option
 import com.example.intervaltimer.future_intervalTimer.domain.model.TimerModel
-import com.example.intervaltimer.future_intervalTimer.domain.util.Screen
+import com.example.intervaltimer.future_intervalTimer.present.util.screen.Screen
 import com.example.intervaltimer.View.TextField
 import com.example.intervaltimer.R.drawable.ic_play
 
