@@ -1,4 +1,4 @@
-package com.example.intervaltimer.Present
+package com.example.intervaltimer.future_intervalTimer.present
 
 import android.content.Context
 import android.media.MediaPlayer
@@ -15,8 +15,8 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
-import com.example.intervaltimer.Model.Option
-import com.example.intervaltimer.Model.TimerModel
+import com.example.intervaltimer.future_intervalTimer.domain.model.Option
+import com.example.intervaltimer.future_intervalTimer.domain.model.TimerModel
 import com.example.intervaltimer.R.drawable.ic_play
 import com.example.intervaltimer.R.drawable.ic_pause
 import com.example.intervaltimer.ui.theme.Green

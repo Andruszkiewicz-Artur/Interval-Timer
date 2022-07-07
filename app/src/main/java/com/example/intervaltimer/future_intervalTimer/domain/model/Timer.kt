@@ -1,4 +1,4 @@
-package com.example.intervaltimer.Model
+package com.example.intervaltimer.future_intervalTimer.domain.model
 
 data class TimerModel(
     val startTime: Int,

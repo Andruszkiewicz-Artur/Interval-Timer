@@ -1,4 +1,4 @@
-package com.example.intervaltimer.Present
+package com.example.intervaltimer.future_intervalTimer.present
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
@@ -15,9 +15,9 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
-import com.example.intervaltimer.Model.Option
-import com.example.intervaltimer.Model.TimerModel
-import com.example.intervaltimer.Navigation.Screen
+import com.example.intervaltimer.future_intervalTimer.domain.model.Option
+import com.example.intervaltimer.future_intervalTimer.domain.model.TimerModel
+import com.example.intervaltimer.future_intervalTimer.domain.util.Screen
 import com.example.intervaltimer.View.TextField
 import com.example.intervaltimer.R.drawable.ic_play
 
@@ -50,7 +50,8 @@ fun Home(
                 modifier = Modifier
                     .size(100.dp)
                     .clickable {
-                        navHostController.navigate(Screen.Timer.sendData(
+                        navHostController.navigate(
+                            Screen.Timer.sendData(
                             TimerModel(
                                 startTime = (startTimeMin * 60) + startTimeSec,
                                 rounds = rounds,

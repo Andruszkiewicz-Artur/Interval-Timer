@@ -14,7 +14,7 @@
         android:theme="@style/Theme.IntervalTimer"
         tools:targetApi="31">
         <activity
-            android:name=".MainActivity"
+            android:name=".future_intervalTimer.present.MainActivity"
             android:exported="true"
             android:label="@string/app_name"
             android:theme="@style/Theme.IntervalTimer">

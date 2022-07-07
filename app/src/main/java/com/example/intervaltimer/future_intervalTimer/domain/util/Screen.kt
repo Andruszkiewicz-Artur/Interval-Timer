@@ -1,6 +1,6 @@
-package com.example.intervaltimer.Navigation
+package com.example.intervaltimer.future_intervalTimer.domain.util
 
-import com.example.intervaltimer.Model.TimerModel
+import com.example.intervaltimer.future_intervalTimer.domain.model.TimerModel
 
 sealed class Screen(
     val route: String

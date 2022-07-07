@@ -1,4 +1,4 @@
-package com.example.intervaltimer.Navigation
+package com.example.intervaltimer.future_intervalTimer.domain.util
 
 import androidx.compose.runtime.Composable
 import androidx.navigation.NavHostController
@@ -6,9 +6,9 @@ import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.navArgument
-import com.example.intervaltimer.Model.TimerModel
-import com.example.intervaltimer.Present.Home
-import com.example.intervaltimer.Present.Timer
+import com.example.intervaltimer.future_intervalTimer.domain.model.TimerModel
+import com.example.intervaltimer.future_intervalTimer.present.Home
+import com.example.intervaltimer.future_intervalTimer.present.Timer
 
 @Composable
 fun NavGraph(
