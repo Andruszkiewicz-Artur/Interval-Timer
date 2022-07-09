@@ -5,6 +5,7 @@ import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material3.Button
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
@@ -20,6 +21,7 @@ import com.example.intervaltimer.future_intervalTimer.domain.model.TimerModel
 import com.example.intervaltimer.future_intervalTimer.present.util.screen.Screen
 import com.example.intervaltimer.View.TextField
 import com.example.intervaltimer.R.drawable.ic_play
+import com.example.intervaltimer.future_intervalTimer.present.home.compose.timerOption
 
 @Composable
 fun Home(
@@ -52,13 +54,14 @@ fun Home(
                     .clickable {
                         navHostController.navigate(
                             Screen.Timer.sendData(
-                            TimerModel(
-                                startTime = (startTimeMin * 60) + startTimeSec,
-                                rounds = rounds,
-                                delay = (delayMin * 60) + delaySec,
-                                roundTime = (roundMin * 60) + roundSec
+                                TimerModel(
+                                    startTime = (startTimeMin * 60) + startTimeSec,
+                                    rounds = rounds,
+                                    delay = (delayMin * 60) + delaySec,
+                                    roundTime = (roundMin * 60) + roundSec
+                                )
                             )
-                        ))
+                        )
                     }
             )
             Spacer(modifier = Modifier.height(20.dp))
@@ -105,6 +108,19 @@ fun Home(
                         option = Option.Rounds
                     }
             )
+
+            Spacer(modifier = Modifier.height(50.dp))
+            Button(
+                onClick = {
+                    navHostController.navigate(Screen.History.route)
+                },
+                modifier = Modifier
+                    .fillMaxWidth(0.5f)
+            ) {
+                Text(
+                    text = "History"
+                )
+            }
         }
     }
 
@@ -137,88 +153,46 @@ fun Home(
             ) {
                 when(option) {
                     Option.Start_Time -> {
-                        Text(text = "Start Time")
-                        Spacer(modifier = Modifier.height(10.dp))
-                        Row(
-                            horizontalArrangement = Arrangement.SpaceBetween
-                        ) {
-                            TextField(
-                                title = "Min",
-                                text = startTimeMin,
-                                value = {
-                                    startTimeMin = it
-                                }
-                            )
-                            Spacer(modifier = Modifier.width(10.dp))
-                            TextField(
-                                title = "Sec",
-                                text = startTimeSec,
-                                value = {
-                                    startTimeSec = it
-                                }
-                            )
-                        }
+                        timerOption(
+                            title = "Time to prepare",
+                            firstField = Pair("Min", startTimeMin),
+                            secondField = Pair("Sec", startTimeSec),
+                            value = { min, sec ->
+                                startTimeMin = min
+                                startTimeSec = sec ?: 0
+                            }
+                        )
                     }
                     Option.Round_Time -> {
-                        Text(text = "Round Time")
-                        Spacer(modifier = Modifier.height(10.dp))
-                        Row(
-                            horizontalArrangement = Arrangement.SpaceBetween
-                        ) {
-                            TextField(
-                                title = "Min",
-                                text = roundMin,
-                                value = {
-                                    roundMin = it
-                                }
-                            )
-                            Spacer(modifier = Modifier.width(10.dp))
-                            TextField(
-                                title = "Sec",
-                                text = roundSec,
-                                value = {
-                                    roundSec = it
-                                }
-                            )
-                        }
+                        timerOption(
+                            title = "Round Time",
+                            firstField = Pair("Min", roundMin),
+                            secondField = Pair("Sec", roundSec),
+                            value = { min, sec ->
+                                roundMin = min
+                                roundSec = sec ?: 0
+                            }
+                        )
                     }
                     Option.Delay -> {
-                        Text(text = "Delay Time")
-                        Spacer(modifier = Modifier.height(10.dp))
-                        Row(
-                            horizontalArrangement = Arrangement.SpaceBetween
-                        ) {
-                            TextField(
-                                title = "Min",
-                                text = delayMin,
-                                value = {
-                                    delayMin = it
-                                }
-                            )
-                            Spacer(modifier = Modifier.width(10.dp))
-                            TextField(
-                                title = "Sec",
-                                text = delaySec,
-                                value = {
-                                    delaySec = it
-                                }
-                            )
-                        }
+                        timerOption(
+                            title = "Break Time",
+                            firstField = Pair("Min", delayMin),
+                            secondField = Pair("Sec", delaySec),
+                            value = { min, sec ->
+                                delayMin = min
+                                delaySec = sec ?: 0
+                            }
+                        )
                     }
                     Option.Rounds -> {
-                        Text(text = "Rounds")
-                        Spacer(modifier = Modifier.height(10.dp))
-                        Row(
-                            horizontalArrangement = Arrangement.SpaceBetween
-                        ) {
-                            TextField(
-                                title = "How many Rounds",
-                                text = rounds,
-                                value = {
-                                    rounds = it
-                                }
-                            )
-                        }
+                        timerOption(
+                            title = "Rounds",
+                            firstField = Pair("How many Rounds", rounds),
+                            value = { comingRounds, _ ->
+                                rounds = comingRounds
+                            }
+                        )
                     }
                 }
             }

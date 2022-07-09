@@ -14,6 +14,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
+import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
 import com.example.intervaltimer.core.enums.Option
 import com.example.intervaltimer.future_intervalTimer.domain.model.TimerModel
@@ -26,11 +27,13 @@ import kotlinx.coroutines.delay
 import com.example.intervaltimer.R.raw.gong
 import com.example.intervaltimer.R.raw.bell_finish
 import com.example.intervaltimer.R.raw.bell_soon
+import com.example.intervaltimer.future_intervalTimer.present.timer.TimerViewModel
 
 @Composable
 fun Timer(
     navHostController: NavHostController,
-    timer: TimerModel
+    timer: TimerModel,
+    viewModel: TimerViewModel = hiltViewModel()
 ) {
     val context = LocalContext.current
     var rounds by remember { mutableStateOf(timer.rounds) }
@@ -77,6 +80,7 @@ fun Timer(
 
                 if(rounds == 0 && time <= 0) {
                     playAudio(context, gong)
+                    viewModel.insertIntervalTimer(TimerModel.toIntervalTimer(timer))
                     navHostController.popBackStack()
                 }
             }

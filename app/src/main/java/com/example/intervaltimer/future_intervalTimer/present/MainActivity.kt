@@ -7,7 +7,9 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
 import com.example.intervaltimer.future_intervalTimer.present.util.NavGraph
 import com.example.intervaltimer.ui.theme.IntervalTimerTheme
+import dagger.hilt.android.AndroidEntryPoint
 
+@AndroidEntryPoint
 class MainActivity : ComponentActivity() {
 
     lateinit var navController: NavHostController

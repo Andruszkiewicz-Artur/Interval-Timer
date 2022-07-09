@@ -19,4 +19,7 @@ sealed class Screen(
         }
     }
 
+    object History: Screen(
+        route = "history"
+    )
 }

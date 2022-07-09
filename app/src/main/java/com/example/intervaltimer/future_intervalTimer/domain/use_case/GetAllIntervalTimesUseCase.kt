@@ -8,6 +8,8 @@ class GetAllIntervalTimesUseCase(
     private val repository: IntervalTimeRepository
 ) {
 
-    operator fun invoke(): Flow<List<IntervalTime>> = repository.getAllIntervalTimes()
+    operator fun invoke(): Flow<List<IntervalTime>> {
+        return repository.getAllIntervalTimes()
+    }
 
 }

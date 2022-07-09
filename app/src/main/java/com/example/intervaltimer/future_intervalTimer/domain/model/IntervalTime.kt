@@ -11,5 +11,16 @@ data class IntervalTime(
     var roundTime: Int,
     var breakTime: Int,
     var roundsCount: Int,
-    var date: Date
-)
+    var date: String
+) {
+    companion object {
+        fun toTimer(intervalTime: IntervalTime): TimerModel {
+            return TimerModel(
+                startTime = intervalTime.prepareTime,
+                roundTime = intervalTime.roundTime,
+                delay = intervalTime.breakTime,
+                rounds = intervalTime.roundsCount
+            )
+        }
+    }
+}
