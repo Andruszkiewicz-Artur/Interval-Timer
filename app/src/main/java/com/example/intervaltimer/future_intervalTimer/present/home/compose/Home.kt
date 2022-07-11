@@ -1,10 +1,14 @@
 package com.example.intervaltimer.future_intervalTimer.present
 
+import android.widget.Toast
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.AddCircle
+import androidx.compose.material.icons.filled.PlayArrow
 import androidx.compose.material3.Button
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
@@ -13,20 +17,27 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.vector.rememberVectorPainter
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
+import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
 import com.example.intervaltimer.core.enums.Option
 import com.example.intervaltimer.future_intervalTimer.domain.model.TimerModel
 import com.example.intervaltimer.future_intervalTimer.present.util.screen.Screen
-import com.example.intervaltimer.View.TextField
 import com.example.intervaltimer.R.drawable.ic_play
+import com.example.intervaltimer.future_intervalTimer.domain.model.OwnIntervalTime
 import com.example.intervaltimer.future_intervalTimer.present.home.compose.timerOption
+import com.example.intervaltimer.future_intervalTimer.present.home.HomeViewModel
 
 @Composable
 fun Home(
-    navHostController: NavHostController
+    navHostController: NavHostController,
+    viewModel: HomeViewModel = hiltViewModel()
 ) {
+    val context = LocalContext.current
+
     var startTimeMin by remember { mutableStateOf(0) }
     var startTimeSec by remember { mutableStateOf(15) }
     var roundMin by remember { mutableStateOf(3) }
@@ -45,15 +56,38 @@ fun Home(
             verticalArrangement = Arrangement.Center,
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
-            Icon(
-                painter = painterResource(id = ic_play),
-                contentDescription = null,
-                tint = MaterialTheme.colorScheme.primary,
-                modifier = Modifier
-                    .size(100.dp)
-                    .clickable {
-                        navHostController.navigate(
-                            Screen.Timer.sendData(
+            Row(
+                verticalAlignment = Alignment.CenterVertically,
+                horizontalArrangement = Arrangement.SpaceBetween
+            ) {
+                Icon(
+                    painter = painterResource(id = ic_play),
+                    contentDescription = null,
+                    tint = MaterialTheme.colorScheme.primary,
+                    modifier = Modifier
+                        .size(100.dp)
+                        .clickable {
+                            navHostController.navigate(
+                                Screen.Timer.sendData(
+                                    TimerModel(
+                                        startTime = (startTimeMin * 60) + startTimeSec,
+                                        rounds = rounds,
+                                        delay = (delayMin * 60) + delaySec,
+                                        roundTime = (roundMin * 60) + roundSec
+                                    )
+                                )
+                            )
+                        }
+                )
+                Spacer(modifier = Modifier.width(20.dp))
+                Icon(
+                    painter = rememberVectorPainter(image = Icons.Filled.AddCircle),
+                    contentDescription = null,
+                    tint = MaterialTheme.colorScheme.primary,
+                    modifier = Modifier
+                        .size(50.dp)
+                        .clickable {
+                            val isInsert = viewModel.insertOwnIntervalTime(
                                 TimerModel(
                                     startTime = (startTimeMin * 60) + startTimeSec,
                                     rounds = rounds,
@@ -61,9 +95,16 @@ fun Home(
                                     roundTime = (roundMin * 60) + roundSec
                                 )
                             )
-                        )
-                    }
-            )
+
+//                            Toast.makeText(
+//                                context,
+//                                if(isInsert) "You create new Own Interval Timer"
+//                                else "You have this timer",
+//                                Toast.LENGTH_LONG).show()
+
+                        }
+                )
+            }
             Spacer(modifier = Modifier.height(20.dp))
             Text(
                 text = "Time to prepare"

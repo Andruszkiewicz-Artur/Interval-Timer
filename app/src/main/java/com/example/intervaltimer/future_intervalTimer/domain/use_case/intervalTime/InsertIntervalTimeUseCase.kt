@@ -1,4 +1,4 @@
-package com.example.intervaltimer.future_intervalTimer.domain.use_case
+package com.example.intervaltimer.future_intervalTimer.domain.use_case.intervalTime
 
 import com.example.intervaltimer.future_intervalTimer.domain.model.IntervalTime
 import com.example.intervaltimer.future_intervalTimer.domain.repository.IntervalTimeRepository

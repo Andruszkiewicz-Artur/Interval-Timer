@@ -18,4 +18,5 @@ interface IntervalTimeDao {
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun insertIntervalTime(intervalTime: IntervalTime)
+    
 }

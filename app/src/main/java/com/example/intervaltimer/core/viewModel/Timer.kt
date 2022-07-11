@@ -19,4 +19,13 @@ data class TimerModel(
             )
         }
     }
+
+    fun toOwnIntervalTimer(): OwnIntervalTime {
+        return OwnIntervalTime(
+            prepareTime = this.startTime,
+            breakTime = this.delay,
+            roundTime = this.roundTime,
+            roundsCount = this.rounds
+        )
+    }
 }

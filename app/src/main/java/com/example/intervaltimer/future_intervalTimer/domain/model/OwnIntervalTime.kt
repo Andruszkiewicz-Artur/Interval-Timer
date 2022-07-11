@@ -2,16 +2,14 @@ package com.example.intervaltimer.future_intervalTimer.domain.model
 
 import androidx.room.Entity
 import androidx.room.PrimaryKey
-import java.util.*
 
-@Entity(tableName = "intervalTime")
-data class IntervalTime(
+@Entity(tableName = "ownIntervalTime")
+data class OwnIntervalTime(
     @PrimaryKey var id: Int? = null,
     var prepareTime: Int,
     var roundTime: Int,
     var breakTime: Int,
-    var roundsCount: Int,
-    var date: String
+    var roundsCount: Int
 ) {
     fun toTimer(): TimerModel {
         return TimerModel(
