@@ -96,11 +96,14 @@ fun Home(
                                 )
                             )
 
-//                            Toast.makeText(
-//                                context,
-//                                if(isInsert) "You create new Own Interval Timer"
-//                                else "You have this timer",
-//                                Toast.LENGTH_LONG).show()
+                            Toast
+                                .makeText(
+                                    context,
+                                    if (isInsert) "You create new Own Interval Timer"
+                                    else "You have this timer",
+                                    Toast.LENGTH_LONG
+                                )
+                                .show()
 
                         }
                 )
@@ -151,6 +154,18 @@ fun Home(
             )
 
             Spacer(modifier = Modifier.height(50.dp))
+            Button(
+                onClick = {
+                    navHostController.navigate(Screen.OwnIntervalTimers.route)
+                },
+                modifier = Modifier
+                    .fillMaxWidth(0.5f)
+            ) {
+                Text(
+                    text = "Own Intervals"
+                )
+            }
+            Spacer(modifier = Modifier.height(20.dp))
             Button(
                 onClick = {
                     navHostController.navigate(Screen.History.route)

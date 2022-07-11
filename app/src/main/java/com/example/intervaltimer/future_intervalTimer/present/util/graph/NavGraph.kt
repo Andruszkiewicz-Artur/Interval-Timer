@@ -10,6 +10,7 @@ import com.example.intervaltimer.future_intervalTimer.domain.model.TimerModel
 import com.example.intervaltimer.future_intervalTimer.present.Home
 import com.example.intervaltimer.future_intervalTimer.present.Timer
 import com.example.intervaltimer.future_intervalTimer.present.history.compose.HistoryPresent
+import com.example.intervaltimer.future_intervalTimer.present.ownIntervalTimes.compose.OwnIntervalTimePresent
 import com.example.intervaltimer.future_intervalTimer.present.util.screen.Screen
 
 @Composable
@@ -60,6 +61,14 @@ fun NavGraph(
             route = Screen.History.route
         ) {
             HistoryPresent(
+                navHostController = navHostController
+            )
+        }
+
+        composable(
+            route = Screen.OwnIntervalTimers.route
+        ) {
+            OwnIntervalTimePresent(
                 navHostController = navHostController
             )
         }

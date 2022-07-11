@@ -29,13 +29,14 @@ class HomeViewModel @Inject constructor(
                     }.isEmpty()
 
         if(result) {
-            return false
-        } else {
             viewModelScope.launch {
                 ownIntervalTimeUseCases.insertOwnIntervalTimeUseCase.invoke(timerModel.toOwnIntervalTimer())
             }
             return true
         }
+
+        return false
+
     }
 
     private fun getAllOwnIntervalTimes() {

@@ -22,4 +22,8 @@ sealed class Screen(
     object History: Screen(
         route = "history"
     )
+
+    object OwnIntervalTimers: Screen(
+        route = "ownIntervalTimers"
+    )
 }

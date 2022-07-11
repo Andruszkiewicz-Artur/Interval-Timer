@@ -2,10 +2,7 @@ package com.example.intervaltimer.future_intervalTimer.present.ownIntervalTimes.
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
-import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Delete
@@ -39,6 +36,7 @@ fun OwnIntervalTimesItem(
                 shape = RoundedCornerShape(20.dp)
             )
             .fillMaxWidth()
+            .padding(horizontal = 20.dp, vertical = 10.dp)
     ) {
 
         Text(
@@ -46,11 +44,11 @@ fun OwnIntervalTimesItem(
         )
 
         Text(
-            text = "${ownIntervalTime.roundTime/60}:${if(ownIntervalTime.roundTime%60 < 10) "0" + ownIntervalTime.roundTime%60 else ownIntervalTime.prepareTime%60}"
+            text = "${ownIntervalTime.roundTime/60}:${if(ownIntervalTime.roundTime%60 < 10) "0" + ownIntervalTime.roundTime%60 else ownIntervalTime.roundTime%60}"
         )
 
         Text(
-            text = "${ownIntervalTime.breakTime/60}:${if(ownIntervalTime.breakTime%60 < 10) "0" + ownIntervalTime.breakTime%60 else ownIntervalTime.prepareTime%60}"
+            text = "${ownIntervalTime.breakTime/60}:${if(ownIntervalTime.breakTime%60 < 10) "0" + ownIntervalTime.breakTime%60 else ownIntervalTime.breakTime%60}"
         )
 
         Text(
