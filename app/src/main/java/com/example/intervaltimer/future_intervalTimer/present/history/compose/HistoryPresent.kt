@@ -27,11 +27,12 @@ fun HistoryPresent(
     ) {
         Text(
             text = "History",
-            style = MaterialTheme.typography.displayLarge,
+            style = MaterialTheme.typography.headlineLarge,
             modifier = Modifier
                 .fillMaxWidth()
-                .padding(top = 20.dp),
-            textAlign = TextAlign.Center
+                .padding(20.dp),
+            color = MaterialTheme.colorScheme.primary,
+            textAlign = TextAlign.Left
         )
 
         Spacer(modifier = Modifier.height(16.dp))

@@ -28,6 +28,7 @@ import com.example.intervaltimer.R.raw.gong
 import com.example.intervaltimer.R.raw.bell_finish
 import com.example.intervaltimer.R.raw.bell_soon
 import com.example.intervaltimer.future_intervalTimer.present.timer.TimerViewModel
+import com.example.intervaltimer.ui.theme.Blue50
 
 @Composable
 fun Timer(
@@ -116,7 +117,7 @@ fun Timer(
             Icon(
                 painter = painterResource(id = if(isWork) ic_pause else ic_play),
                 contentDescription = null,
-                tint = MaterialTheme.colorScheme.primary,
+                tint = Blue50,
                 modifier = Modifier
                     .size(100.dp)
                     .clickable {

@@ -5,14 +5,13 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.AddCircle
 import androidx.compose.material.icons.filled.PlayArrow
-import androidx.compose.material3.Button
-import androidx.compose.material3.Icon
-import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Text
+import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -31,6 +30,7 @@ import com.example.intervaltimer.future_intervalTimer.domain.model.OwnIntervalTi
 import com.example.intervaltimer.future_intervalTimer.present.home.compose.timerOption
 import com.example.intervaltimer.future_intervalTimer.present.home.HomeViewModel
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun Home(
     navHostController: NavHostController,
@@ -47,14 +47,53 @@ fun Home(
     var rounds by remember { mutableStateOf(5) }
     var option by remember { mutableStateOf<Option?>(null) }
 
-    Box(
-        contentAlignment = Alignment.Center,
-        modifier = Modifier
-            .fillMaxSize()
+
+    Scaffold(
+        floatingActionButton = {
+            Box(
+                modifier = Modifier
+                    .padding(8.dp)
+                    .background(
+                        color = MaterialTheme.colorScheme.tertiaryContainer,
+                        shape = CircleShape
+                    )
+            ) {
+                Icon(
+                    painter = rememberVectorPainter(image = Icons.Default.Add),
+                    contentDescription = null,
+                    tint = MaterialTheme.colorScheme.tertiary,
+                    modifier = Modifier
+                        .size(50.dp)
+                        .padding(8.dp)
+                        .clickable {
+                            val isInsert = viewModel.insertOwnIntervalTime(
+                                TimerModel(
+                                    startTime = (startTimeMin * 60) + startTimeSec,
+                                    rounds = rounds,
+                                    delay = (delayMin * 60) + delaySec,
+                                    roundTime = (roundMin * 60) + roundSec
+                                )
+                            )
+
+                            Toast
+                                .makeText(
+                                    context,
+                                    if (isInsert) "You create new Own Interval Timer"
+                                    else "You have this timer",
+                                    Toast.LENGTH_LONG
+                                )
+                                .show()
+
+                        }
+                )
+            }
+        }
     ) {
         Column(
             verticalArrangement = Arrangement.Center,
-            horizontalAlignment = Alignment.CenterHorizontally
+            horizontalAlignment = Alignment.CenterHorizontally,
+            modifier = Modifier
+                .fillMaxSize()
         ) {
             Row(
                 verticalAlignment = Alignment.CenterVertically,
@@ -77,34 +116,6 @@ fun Home(
                                     )
                                 )
                             )
-                        }
-                )
-                Spacer(modifier = Modifier.width(20.dp))
-                Icon(
-                    painter = rememberVectorPainter(image = Icons.Filled.AddCircle),
-                    contentDescription = null,
-                    tint = MaterialTheme.colorScheme.primary,
-                    modifier = Modifier
-                        .size(50.dp)
-                        .clickable {
-                            val isInsert = viewModel.insertOwnIntervalTime(
-                                TimerModel(
-                                    startTime = (startTimeMin * 60) + startTimeSec,
-                                    rounds = rounds,
-                                    delay = (delayMin * 60) + delaySec,
-                                    roundTime = (roundMin * 60) + roundSec
-                                )
-                            )
-
-                            Toast
-                                .makeText(
-                                    context,
-                                    if (isInsert) "You create new Own Interval Timer"
-                                    else "You have this timer",
-                                    Toast.LENGTH_LONG
-                                )
-                                .show()
-
                         }
                 )
             }
@@ -179,6 +190,7 @@ fun Home(
             }
         }
     }
+
 
     if(option != null) {
         Box(

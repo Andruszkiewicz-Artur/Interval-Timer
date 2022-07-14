@@ -32,7 +32,7 @@ fun OwnIntervalTimesItem(
         horizontalArrangement = Arrangement.SpaceBetween,
         modifier = Modifier
             .background(
-                color = MaterialTheme.colorScheme.secondary,
+                color = MaterialTheme.colorScheme.primaryContainer,
                 shape = RoundedCornerShape(20.dp)
             )
             .fillMaxWidth()
@@ -40,25 +40,29 @@ fun OwnIntervalTimesItem(
     ) {
 
         Text(
-            text = "${ownIntervalTime.prepareTime/60}:${if(ownIntervalTime.prepareTime%60 < 10) "0" + ownIntervalTime.prepareTime%60 else ownIntervalTime.prepareTime%60}"
+            text = "${ownIntervalTime.prepareTime/60}:${if(ownIntervalTime.prepareTime%60 < 10) "0" + ownIntervalTime.prepareTime%60 else ownIntervalTime.prepareTime%60}",
+            color = MaterialTheme.colorScheme.primary
         )
 
         Text(
-            text = "${ownIntervalTime.roundTime/60}:${if(ownIntervalTime.roundTime%60 < 10) "0" + ownIntervalTime.roundTime%60 else ownIntervalTime.roundTime%60}"
+            text = "${ownIntervalTime.roundTime/60}:${if(ownIntervalTime.roundTime%60 < 10) "0" + ownIntervalTime.roundTime%60 else ownIntervalTime.roundTime%60}",
+            color = MaterialTheme.colorScheme.primary
         )
 
         Text(
-            text = "${ownIntervalTime.breakTime/60}:${if(ownIntervalTime.breakTime%60 < 10) "0" + ownIntervalTime.breakTime%60 else ownIntervalTime.breakTime%60}"
+            text = "${ownIntervalTime.breakTime/60}:${if(ownIntervalTime.breakTime%60 < 10) "0" + ownIntervalTime.breakTime%60 else ownIntervalTime.breakTime%60}",
+            color = MaterialTheme.colorScheme.primary
         )
 
         Text(
-            text = "${ownIntervalTime.roundsCount}"
+            text = "${ownIntervalTime.roundsCount}",
+            color = MaterialTheme.colorScheme.primary
         )
 
         Icon(
             painter = rememberVectorPainter(image = Icons.Filled.Delete),
             contentDescription = null,
-            tint = Blue50,
+            tint = MaterialTheme.colorScheme.primary,
             modifier = Modifier
                 .size(40.dp)
                 .clickable {
@@ -69,7 +73,7 @@ fun OwnIntervalTimesItem(
         Icon(
             painter = rememberVectorPainter(image = Icons.Filled.PlayArrow),
             contentDescription = null,
-            tint = Blue50,
+            tint = MaterialTheme.colorScheme.primary,
             modifier = Modifier
                 .size(40.dp)
                 .clickable {

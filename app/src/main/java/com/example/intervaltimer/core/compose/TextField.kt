@@ -4,8 +4,10 @@ import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.BasicTextField
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
@@ -34,8 +36,8 @@ fun TextField(
             modifier = Modifier
                 .border(
                     width = 1.dp,
-                    color = Red,
-                    shape = RoundedCornerShape(50)
+                    color = MaterialTheme.colorScheme.tertiary,
+                    shape = CircleShape
                 ),
             textStyle = TextStyle(
                 textAlign = TextAlign.Center
