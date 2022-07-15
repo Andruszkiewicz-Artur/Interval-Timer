@@ -26,9 +26,12 @@ import com.example.intervaltimer.core.enums.Option
 import com.example.intervaltimer.future_intervalTimer.domain.model.TimerModel
 import com.example.intervaltimer.future_intervalTimer.present.util.screen.Screen
 import com.example.intervaltimer.R.drawable.ic_play
+import com.example.intervaltimer.core.Event.UiEvent
 import com.example.intervaltimer.future_intervalTimer.domain.model.OwnIntervalTime
+import com.example.intervaltimer.future_intervalTimer.present.home.HomeEvent
 import com.example.intervaltimer.future_intervalTimer.present.home.compose.timerOption
 import com.example.intervaltimer.future_intervalTimer.present.home.HomeViewModel
+import kotlinx.coroutines.flow.collectLatest
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -47,6 +50,15 @@ fun Home(
     var rounds by remember { mutableStateOf(5) }
     var option by remember { mutableStateOf<Option?>(null) }
 
+    LaunchedEffect(key1 = true) {
+        viewModel.eventFlow.collectLatest { event ->
+            when(event) {
+                is UiEvent.ShowToast -> {
+                    Toast.makeText(context, event.message, Toast.LENGTH_LONG).show()
+                }
+            }
+        }
+    }
 
     Scaffold(
         floatingActionButton = {
@@ -66,24 +78,16 @@ fun Home(
                         .size(50.dp)
                         .padding(8.dp)
                         .clickable {
-                            val isInsert = viewModel.insertOwnIntervalTime(
-                                TimerModel(
-                                    startTime = (startTimeMin * 60) + startTimeSec,
-                                    rounds = rounds,
-                                    delay = (delayMin * 60) + delaySec,
-                                    roundTime = (roundMin * 60) + roundSec
+                            viewModel.onEvent(
+                                HomeEvent.InsertOwnIntervalTime(
+                                    TimerModel(
+                                        startTime = (startTimeMin * 60) + startTimeSec,
+                                        rounds = rounds,
+                                        delay = (delayMin * 60) + delaySec,
+                                        roundTime = (roundMin * 60) + roundSec
+                                    )
                                 )
                             )
-
-                            Toast
-                                .makeText(
-                                    context,
-                                    if (isInsert) "You create new Own Interval Timer"
-                                    else "You have this timer",
-                                    Toast.LENGTH_LONG
-                                )
-                                .show()
-
                         }
                 )
             }

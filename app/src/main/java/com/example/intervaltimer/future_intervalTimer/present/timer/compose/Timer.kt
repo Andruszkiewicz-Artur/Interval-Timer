@@ -2,6 +2,7 @@ package com.example.intervaltimer.future_intervalTimer.present
 
 import android.content.Context
 import android.media.MediaPlayer
+import android.widget.Toast
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
@@ -27,8 +28,10 @@ import kotlinx.coroutines.delay
 import com.example.intervaltimer.R.raw.gong
 import com.example.intervaltimer.R.raw.bell_finish
 import com.example.intervaltimer.R.raw.bell_soon
+import com.example.intervaltimer.core.Event.UiEvent
 import com.example.intervaltimer.future_intervalTimer.present.timer.TimerViewModel
 import com.example.intervaltimer.ui.theme.Blue50
+import kotlinx.coroutines.flow.collectLatest
 
 @Composable
 fun Timer(
@@ -42,6 +45,16 @@ fun Timer(
     var time by remember { mutableStateOf(timer.startTime) }
     var option by remember { mutableStateOf<Option?>(Option.Start_Time) }
     var delay by remember { mutableStateOf(0) }
+
+    LaunchedEffect(key1 = true) {
+        viewModel.shareFlow.collectLatest { event ->
+            when(event) {
+                is UiEvent.ShowToast -> {
+                    Toast.makeText(context, event.message, Toast.LENGTH_LONG)
+                }
+            }
+        }
+    }
 
     LaunchedEffect(key1 = delay, key2 = isWork) {
         if(isWork) {

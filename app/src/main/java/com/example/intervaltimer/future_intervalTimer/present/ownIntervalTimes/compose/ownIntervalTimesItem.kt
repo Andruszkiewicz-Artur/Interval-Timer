@@ -66,7 +66,7 @@ fun OwnIntervalTimesItem(
             modifier = Modifier
                 .size(40.dp)
                 .clickable {
-                    viewModel.deleteOwnIntervalTime(ownIntervalTime)
+                    viewModel.onEvent(OwnIntervalTimeEvent.DeleteOwnIntervalTime(ownIntervalTime))
                 }
         )
 
