@@ -3,6 +3,7 @@ package com.example.intervaltimer.future_intervalTimer.present.history.compose
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
+import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -19,7 +20,7 @@ fun HistoryPresent(
     viewModel: HistoryViewModel = hiltViewModel()
 ) {
 
-    val state = viewModel.state.value
+    val intervalTimes = viewModel.state.value.intervalTimes
 
     Column(
         modifier = Modifier
@@ -37,18 +38,29 @@ fun HistoryPresent(
 
         Spacer(modifier = Modifier.height(16.dp))
 
-        LazyColumn(
-            modifier = Modifier
-                .fillMaxSize()
-                .padding(20.dp),
-            verticalArrangement = Arrangement.spacedBy(8.dp)
-        ) {
-            items(state.intervalTimes) { intervatTimer ->
-                HistoryItem(
-                    navHostController = navHostController,
-                    timer = intervatTimer.toTimer()
-                )
+        if(intervalTimes.isNotEmpty()) {
+            LazyColumn(
+                modifier = Modifier
+                    .fillMaxSize()
+                    .padding(20.dp),
+                verticalArrangement = Arrangement.spacedBy(8.dp)
+            ) {
+                items(intervalTimes) { intervatTimer ->
+                    HistoryItem(
+                        navHostController = navHostController,
+                        timer = intervatTimer.toTimer()
+                    )
+                }
             }
+        } else {
+            Text(
+                text = "History is empty!",
+                style = MaterialTheme.typography.titleSmall,
+                color = MaterialTheme.colorScheme.secondary,
+                textAlign = TextAlign.Center,
+                modifier = Modifier
+                    .fillMaxWidth()
+            )
         }
     }
 

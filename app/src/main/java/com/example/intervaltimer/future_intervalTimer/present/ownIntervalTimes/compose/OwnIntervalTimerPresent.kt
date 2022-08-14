@@ -26,7 +26,7 @@ fun OwnIntervalTimePresent(
 ) {
     val context = LocalContext.current
 
-    val state = viewModel.state.value
+    val ownIntervalTimes = viewModel.state.value.ownIntervalTimes
 
     LaunchedEffect(key1 = true) {
         viewModel.eventFlow.collectLatest { event ->
@@ -52,19 +52,30 @@ fun OwnIntervalTimePresent(
             textAlign = TextAlign.Left
         )
 
-        LazyColumn(
-            modifier = Modifier
-                .fillMaxSize()
-                .padding(20.dp),
-            verticalArrangement = Arrangement.spacedBy(8.dp)
-        ) {
-            items(state.ownIntervalTimes) { ownIntervalTime ->
-                OwnIntervalTimesItem(
-                    navHostController = navHostController,
-                    ownIntervalTime = ownIntervalTime,
-                    viewModel = viewModel
-                )
+        if(ownIntervalTimes.isNotEmpty()) {
+            LazyColumn(
+                modifier = Modifier
+                    .fillMaxSize()
+                    .padding(20.dp),
+                verticalArrangement = Arrangement.spacedBy(8.dp)
+            ) {
+                items(ownIntervalTimes) { ownIntervalTime ->
+                    OwnIntervalTimesItem(
+                        navHostController = navHostController,
+                        ownIntervalTime = ownIntervalTime,
+                        viewModel = viewModel
+                    )
+                }
             }
+        } else {
+            Text(
+                text = "You don`t have own interval timers at now!",
+                style = MaterialTheme.typography.titleSmall,
+                color = MaterialTheme.colorScheme.secondary,
+                textAlign = TextAlign.Center,
+                modifier = Modifier
+                    .fillMaxWidth()
+            )
         }
     }
 

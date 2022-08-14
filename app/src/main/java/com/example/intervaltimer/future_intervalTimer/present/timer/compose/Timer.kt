@@ -94,7 +94,7 @@ fun Timer(
 
                 if(rounds == 0 && time <= 0) {
                     playAudio(context, gong)
-                    viewModel.insertIntervalTimer(TimerModel.toIntervalTimer(timer))
+                    viewModel.insertIntervalTimer(timer.toIntervalTimer())
                     navHostController.popBackStack()
                 }
             }

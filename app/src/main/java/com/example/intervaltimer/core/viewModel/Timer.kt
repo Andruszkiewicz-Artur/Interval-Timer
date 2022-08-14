@@ -8,16 +8,14 @@ data class TimerModel(
     val delay: Int,
     val rounds: Int
 ) {
-    companion object {
-        fun toIntervalTimer(timerModel: TimerModel): IntervalTime {
-            return IntervalTime(
-                prepareTime = timerModel.startTime,
-                roundTime = timerModel.roundTime,
-                breakTime = timerModel.delay,
-                roundsCount = timerModel.rounds,
-                date = Calendar.getInstance().time.toString()
-            )
-        }
+    fun toIntervalTimer(): IntervalTime {
+        return IntervalTime(
+            prepareTime = this.startTime,
+            roundTime = this.roundTime,
+            breakTime = this.delay,
+            roundsCount = this.rounds,
+            date = System.currentTimeMillis()
+        )
     }
 
     fun toOwnIntervalTimer(): OwnIntervalTime {
