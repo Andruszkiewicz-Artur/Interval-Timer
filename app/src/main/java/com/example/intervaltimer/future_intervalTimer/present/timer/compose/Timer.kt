@@ -1,5 +1,6 @@
 package com.example.intervaltimer.future_intervalTimer.present
 
+import android.annotation.SuppressLint
 import android.content.Context
 import android.media.MediaPlayer
 import android.widget.Toast
@@ -33,6 +34,7 @@ import com.example.intervaltimer.future_intervalTimer.present.timer.TimerViewMod
 import com.example.intervaltimer.ui.theme.Blue50
 import kotlinx.coroutines.flow.collectLatest
 
+@SuppressLint("AutoboxingStateCreation")
 @Composable
 fun Timer(
     navHostController: NavHostController,
@@ -50,7 +52,7 @@ fun Timer(
         viewModel.shareFlow.collectLatest { event ->
             when(event) {
                 is UiEvent.ShowToast -> {
-                    Toast.makeText(context, event.message, Toast.LENGTH_LONG)
+                    Toast.makeText(context, event.message, Toast.LENGTH_LONG).show()
                 }
             }
         }
@@ -89,6 +91,9 @@ fun Timer(
                             option = Option.Round_Time
                             time = timer.roundTime
                         }
+
+                        Option.Rounds -> TODO()
+                        null -> TODO()
                     }
                 }
 
