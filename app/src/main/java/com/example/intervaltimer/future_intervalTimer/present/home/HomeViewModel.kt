@@ -45,14 +45,8 @@ class HomeViewModel @Inject constructor(
             is HomeEvent.InsertOwnIntervalTime -> {
                 viewModelScope.launch {
                     if(_state.value.timerExist == false) {
-                        val timerModel = TimerModel(
-                            startTime = _state.value.timeToPrepare,
-                            roundTime = _state.value.roundTime,
-                            delay = _state.value.breakTime,
-                            rounds = _state.value.rounds
-                        )
-                        ownIntervalTimeUseCases.insertOwnIntervalTimeUseCase.invoke(timerModel.toOwnIntervalTimer())
-                        _state.value.ownIntervalTimes.add(timerModel.toOwnIntervalTimer())
+                        ownIntervalTimeUseCases.insertOwnIntervalTimeUseCase.invoke(_state.value.timer.toOwnIntervalTimer())
+                        _state.value.ownIntervalTimes.add(_state.value.timer.toOwnIntervalTimer())
                         _eventFlow.emit(UiEvent.ShowToast("You Add new Interval Time!"))
                     } else if (_state.value.timerExist == null) {
                         _eventFlow.emit(UiEvent.ShowToast("Problem with adding new timer!"))
@@ -64,22 +58,30 @@ class HomeViewModel @Inject constructor(
 
             is HomeEvent.setBreakTime -> {
                 _state.value = state.value.copy(
-                    breakTime = event.time.toInt()
+                    timer = state.value.timer.copy(
+                        delay = event.time.toInt()
+                    )
                 )
             }
             is HomeEvent.setPrepareTime -> {
                 _state.value = state.value.copy(
-                    timeToPrepare = event.time.toInt()
+                    timer = state.value.timer.copy(
+                        startTime = event.time.toInt()
+                    )
                 )
             }
             is HomeEvent.setRoundTime -> {
                 _state.value = state.value.copy(
-                    roundTime = event.time.toInt()
+                    timer = state.value.timer.copy(
+                        roundTime = event.time.toInt()
+                    )
                 )
             }
             is HomeEvent.setRounds -> {
                 _state.value = state.value.copy(
-                    rounds = event.time.toInt()
+                   timer = state.value.timer.copy(
+                       rounds = event.time.toInt()
+                   )
                 )
             }
         }
@@ -102,15 +104,9 @@ class HomeViewModel @Inject constructor(
     private fun isExistTimer() {
         viewModelScope.launch {
             delay(300)
-            val timerModel = TimerModel(
-                startTime = _state.value.timeToPrepare,
-                roundTime = _state.value.roundTime,
-                delay = _state.value.breakTime,
-                rounds = _state.value.rounds
-            )
 
             val isExist = _state.value.ownIntervalTimes.filter { ownTimer ->
-                ownTimer.toTimer() == timerModel
+                ownTimer.toTimer() == _state.value.timer
             }.isNotEmpty()
 
             _state.value = state.value.copy(

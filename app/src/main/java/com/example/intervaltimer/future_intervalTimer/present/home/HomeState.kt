@@ -1,12 +1,15 @@
 package com.example.intervaltimer.future_intervalTimer.present.home
 
 import com.example.intervaltimer.future_intervalTimer.domain.model.OwnIntervalTime
+import com.example.intervaltimer.future_intervalTimer.domain.model.TimerModel
 
 data class HomeState(
     var ownIntervalTimes: MutableList<OwnIntervalTime> = mutableListOf(),
-    val timeToPrepare: Int = 15,
-    val roundTime: Int = 180,
-    val breakTime: Int = 60,
-    val rounds: Int = 5,
+    val timer: TimerModel = TimerModel(
+        startTime = 15,
+        roundTime = 180,
+        delay = 60,
+        rounds = 5
+    ),
     val timerExist: Boolean? = null
 )

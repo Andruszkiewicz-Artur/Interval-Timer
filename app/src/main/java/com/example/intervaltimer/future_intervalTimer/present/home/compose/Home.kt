@@ -7,6 +7,8 @@ import android.widget.Toast
 import androidx.compose.animation.AnimatedContent
 import androidx.compose.animation.ContentTransform
 import androidx.compose.animation.ExperimentalAnimationApi
+import androidx.compose.animation.animateColorAsState
+import androidx.compose.animation.core.animateDpAsState
 import androidx.compose.animation.core.tween
 import androidx.compose.animation.fadeIn
 import androidx.compose.animation.fadeOut
@@ -14,6 +16,7 @@ import androidx.compose.animation.with
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.focusable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -21,12 +24,14 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.AddCircle
 import androidx.compose.material.icons.filled.PlayArrow
+import androidx.compose.material.icons.filled.SurroundSound
 import androidx.compose.material.icons.outlined.Star
 import androidx.compose.material.icons.outlined.StarBorder
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.focus.onFocusChanged
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.rememberVectorPainter
 import androidx.compose.ui.platform.LocalContext
@@ -35,6 +40,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.DialogProperties
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
+import com.example.intervaltimer.R
 import com.example.intervaltimer.core.enums.Option
 import com.example.intervaltimer.future_intervalTimer.domain.model.TimerModel
 import com.example.intervaltimer.future_intervalTimer.present.util.screen.Screen
@@ -45,6 +51,7 @@ import com.example.intervaltimer.future_intervalTimer.domain.model.OwnIntervalTi
 import com.example.intervaltimer.future_intervalTimer.present.home.HomeEvent
 import com.example.intervaltimer.future_intervalTimer.present.home.compose.timerOption
 import com.example.intervaltimer.future_intervalTimer.present.home.HomeViewModel
+import com.example.intervaltimer.future_intervalTimer.present.home.compose.CurrentChoosePresentation
 import com.maxkeppeker.sheets.core.models.base.BaseSelection
 import com.maxkeppeker.sheets.core.models.base.ButtonStyle
 import com.maxkeppeker.sheets.core.models.base.Header
@@ -165,77 +172,49 @@ fun Home(
             modifier = Modifier
                 .fillMaxSize()
         ) {
-            Row(
-                verticalAlignment = Alignment.CenterVertically,
-                horizontalArrangement = Arrangement.SpaceBetween
-            ) {
-                Icon(
-                    painter = painterResource(id = ic_play),
-                    contentDescription = null,
-                    tint = MaterialTheme.colorScheme.primary,
-                    modifier = Modifier
-                        .size(100.dp)
-                        .clickable {
-                            navHostController.navigate(
-                                Screen.Timer.sendData(
-                                    TimerModel(
-                                        startTime = state.timeToPrepare,
-                                        rounds = state.rounds,
-                                        delay = state.breakTime,
-                                        roundTime = state.roundTime
-                                    )
-                                )
+            Icon(
+                painter = painterResource(id = R.drawable.sound_sampler),
+                contentDescription = null,
+                tint = MaterialTheme.colorScheme.primary,
+                modifier = Modifier
+                    .padding(bottom = 40.dp)
+                    .size(200.dp)
+                    .clickable {
+                        navHostController.navigate(
+                            Screen.Timer.sendData(
+                                state.timer
                             )
-                        }
-                )
-            }
-            Spacer(modifier = Modifier.height(20.dp))
-            Text(
+                        )
+                    }
+            )
+
+            CurrentChoosePresentation(
+                time = state.timer.startTime,
                 text = "Time to prepare"
-            )
-            Text(
-                text = "${state.timeToPrepare/60}:${if((state.timeToPrepare%60) < 10) "0" + state.timeToPrepare%60 else state.timeToPrepare%60}",
-                modifier = Modifier
-                    .clickable {
-                        option = ChooseOptionEnum.PrepareTime
-                        timerState.show()
-                    }
-            )
-            Spacer(modifier = Modifier.height(20.dp))
-            Text(
+            ) {
+                option = ChooseOptionEnum.PrepareTime
+                timerState.show()
+            }
+            CurrentChoosePresentation(
+                time = state.timer.roundTime,
                 text = "Round Time"
-            )
-            Text(
-                text = "${state.roundTime/60}:${if((state.roundTime%60) < 10) "0" + state.roundTime%60 else state.roundTime%60}",
-                modifier = Modifier
-                    .clickable {
-                        option = ChooseOptionEnum.RoundTime
-                        timerState.show()
-                    }
-            )
-            Spacer(modifier = Modifier.height(20.dp))
-            Text(
+            ) {
+                option = ChooseOptionEnum.RoundTime
+                timerState.show()
+            }
+            CurrentChoosePresentation(
+                time = state.timer.delay,
                 text = "Break Time"
-            )
-            Text(
-                text = "${state.breakTime/60}:${if((state.breakTime%60) < 10) "0" + state.breakTime%60 else state.breakTime%60}",
-                modifier = Modifier
-                    .clickable {
-                        option = ChooseOptionEnum.BreakTime
-                        timerState.show()
-                    }
-            )
-            Spacer(modifier = Modifier.height(20.dp))
-            Text(
+            ) {
+                option = ChooseOptionEnum.BreakTime
+                timerState.show()
+            }
+            CurrentChoosePresentation(
+                time = state.timer.rounds,
                 text = "Rounds"
-            )
-            Text(
-                text = "${state.rounds}",
-                modifier = Modifier
-                    .clickable {
-                        roundState.show()
-                    }
-            )
+            ) {
+                timerState.show()
+            }
 
             Spacer(modifier = Modifier.height(50.dp))
             Button(
