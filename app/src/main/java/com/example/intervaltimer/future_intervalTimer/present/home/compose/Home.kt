@@ -211,7 +211,8 @@ fun Home(
             }
             CurrentChoosePresentation(
                 time = state.timer.rounds,
-                text = "Rounds"
+                text = "Rounds",
+                isTimer = false
             ) {
                 timerState.show()
             }
