@@ -39,6 +39,8 @@ class ownIntervalTimesViewModel @Inject constructor(
                     _eventFlow.emit(UiEvent.ShowToast("Delete Interval Time"))
                 }
             }
+
+            else -> {}
         }
     }
 

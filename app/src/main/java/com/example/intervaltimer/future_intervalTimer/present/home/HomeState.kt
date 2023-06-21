@@ -8,5 +8,5 @@ data class HomeState(
     val roundTime: Int = 180,
     val breakTime: Int = 60,
     val rounds: Int = 5,
-    val timerExist: Boolean = false
+    val timerExist: Boolean? = null
 )

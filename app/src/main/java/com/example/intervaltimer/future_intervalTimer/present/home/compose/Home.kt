@@ -1,7 +1,16 @@
+@file:OptIn(ExperimentalAnimationApi::class)
+
 package com.example.intervaltimer.future_intervalTimer.present
 
 import android.annotation.SuppressLint
 import android.widget.Toast
+import androidx.compose.animation.AnimatedContent
+import androidx.compose.animation.ContentTransform
+import androidx.compose.animation.ExperimentalAnimationApi
+import androidx.compose.animation.core.tween
+import androidx.compose.animation.fadeIn
+import androidx.compose.animation.fadeOut
+import androidx.compose.animation.with
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
@@ -12,6 +21,8 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.AddCircle
 import androidx.compose.material.icons.filled.PlayArrow
+import androidx.compose.material.icons.outlined.Star
+import androidx.compose.material.icons.outlined.StarBorder
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
@@ -113,25 +124,38 @@ fun Home(
 
     Scaffold(
         floatingActionButton = {
-            Box(
-                modifier = Modifier
-                    .padding(8.dp)
-                    .background(
-                        color = MaterialTheme.colorScheme.tertiaryContainer,
-                        shape = CircleShape
-                    )
+            FloatingActionButton(
+                shape = CircleShape,
+                onClick = {
+                    viewModel.onEvent(HomeEvent.InsertOwnIntervalTime)
+                }
             ) {
-                Icon(
-                    painter = rememberVectorPainter(image = Icons.Default.Add),
-                    contentDescription = null,
-                    tint = MaterialTheme.colorScheme.tertiary,
-                    modifier = Modifier
-                        .size(50.dp)
-                        .padding(8.dp)
-                        .clickable {
-                            viewModel.onEvent(HomeEvent.InsertOwnIntervalTime)
-                        }
-                )
+                AnimatedContent(
+                    targetState = state.timerExist,
+                    transitionSpec = {
+                        fadeIn() with fadeOut()
+                    }
+                ) {
+                    if (it == true) {
+                        Icon(
+                            imageVector = Icons.Outlined.Star,
+                            contentDescription = "Like",
+                            tint = MaterialTheme.colorScheme.secondary,
+                            modifier = Modifier
+                                .size(40.dp)
+
+                        )
+                    } else {
+                        Icon(
+                            imageVector = Icons.Outlined.StarBorder,
+                            contentDescription = "Like",
+                            tint = MaterialTheme.colorScheme.secondary,
+                            modifier = Modifier
+                                .size(40.dp)
+
+                        )
+                    }
+                }
             }
         }
     ) {

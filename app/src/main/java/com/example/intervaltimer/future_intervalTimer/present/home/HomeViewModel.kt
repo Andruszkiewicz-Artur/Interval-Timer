@@ -1,5 +1,6 @@
 package com.example.intervaltimer.future_intervalTimer.present.home
 
+import android.util.Log
 import androidx.compose.runtime.State
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.rememberCoroutineScope
@@ -43,23 +44,19 @@ class HomeViewModel @Inject constructor(
         when(event) {
             is HomeEvent.InsertOwnIntervalTime -> {
                 viewModelScope.launch {
-                    delay(500L)
-                    val timerModel = TimerModel(
-                        startTime = _state.value.timeToPrepare,
-                        roundTime = _state.value.roundTime,
-                        delay = _state.value.breakTime,
-                        rounds = _state.value.rounds
-                    )
-
-                    val result = _state.value.ownIntervalTimes.filter { ownTimer ->
-                        ownTimer.toTimer() == timerModel
-                    }.isEmpty()
-
-                    if(result) {
+                    if(_state.value.timerExist == false) {
+                        val timerModel = TimerModel(
+                            startTime = _state.value.timeToPrepare,
+                            roundTime = _state.value.roundTime,
+                            delay = _state.value.breakTime,
+                            rounds = _state.value.rounds
+                        )
                         ownIntervalTimeUseCases.insertOwnIntervalTimeUseCase.invoke(timerModel.toOwnIntervalTimer())
                         _state.value.ownIntervalTimes.add(timerModel.toOwnIntervalTimer())
                         _eventFlow.emit(UiEvent.ShowToast("You Add new Interval Time!"))
-                    } else {
+                    } else if (_state.value.timerExist == null) {
+                        _eventFlow.emit(UiEvent.ShowToast("Problem with adding new timer!"))
+                    }else {
                         _eventFlow.emit(UiEvent.ShowToast("Interval Time like that exist at now!"))
                     }
                 }
@@ -86,13 +83,39 @@ class HomeViewModel @Inject constructor(
                 )
             }
         }
+        isExistTimer()
     }
 
     private fun getAllOwnIntervalTimes() {
-        ownIntervalTimeUseCases.getAllOwnIntervalTimesUseCase.invoke().onEach { ownIntervalTimes ->
-            _state.value = _state.value.copy(
-                ownIntervalTimes = ownIntervalTimes.toMutableList()
+        viewModelScope.launch {
+            ownIntervalTimeUseCases.getAllOwnIntervalTimesUseCase.invoke().onEach { ownIntervalTimes ->
+                _state.value = _state.value.copy(
+                    ownIntervalTimes = ownIntervalTimes.toMutableList()
+                )
+            }.launchIn(viewModelScope)
+
+            delay(500)
+            isExistTimer()
+        }
+    }
+
+    private fun isExistTimer() {
+        viewModelScope.launch {
+            delay(300)
+            val timerModel = TimerModel(
+                startTime = _state.value.timeToPrepare,
+                roundTime = _state.value.roundTime,
+                delay = _state.value.breakTime,
+                rounds = _state.value.rounds
             )
-        }.launchIn(viewModelScope)
+
+            val isExist = _state.value.ownIntervalTimes.filter { ownTimer ->
+                ownTimer.toTimer() == timerModel
+            }.isNotEmpty()
+
+            _state.value = state.value.copy(
+                timerExist = isExist
+            )
+        }
     }
 }
