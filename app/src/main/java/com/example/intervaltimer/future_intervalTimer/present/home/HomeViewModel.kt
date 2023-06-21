@@ -64,6 +64,27 @@ class HomeViewModel @Inject constructor(
                     }
                 }
             }
+
+            is HomeEvent.setBreakTime -> {
+                _state.value = state.value.copy(
+                    breakTime = event.time.toInt()
+                )
+            }
+            is HomeEvent.setPrepareTime -> {
+                _state.value = state.value.copy(
+                    timeToPrepare = event.time.toInt()
+                )
+            }
+            is HomeEvent.setRoundTime -> {
+                _state.value = state.value.copy(
+                    roundTime = event.time.toInt()
+                )
+            }
+            is HomeEvent.setRounds -> {
+                _state.value = state.value.copy(
+                    rounds = event.time.toInt()
+                )
+            }
         }
     }
 

@@ -21,6 +21,7 @@ import androidx.compose.ui.graphics.vector.rememberVectorPainter
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.window.DialogProperties
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
 import com.example.intervaltimer.core.enums.Option
@@ -28,14 +29,24 @@ import com.example.intervaltimer.future_intervalTimer.domain.model.TimerModel
 import com.example.intervaltimer.future_intervalTimer.present.util.screen.Screen
 import com.example.intervaltimer.R.drawable.ic_play
 import com.example.intervaltimer.core.Event.UiEvent
+import com.example.intervaltimer.future_intervalTimer.domain.model.ChooseOptionEnum
 import com.example.intervaltimer.future_intervalTimer.domain.model.OwnIntervalTime
 import com.example.intervaltimer.future_intervalTimer.present.home.HomeEvent
 import com.example.intervaltimer.future_intervalTimer.present.home.compose.timerOption
 import com.example.intervaltimer.future_intervalTimer.present.home.HomeViewModel
+import com.maxkeppeker.sheets.core.models.base.BaseSelection
+import com.maxkeppeker.sheets.core.models.base.ButtonStyle
+import com.maxkeppeker.sheets.core.models.base.Header
+import com.maxkeppeker.sheets.core.models.base.SelectionButton
+import com.maxkeppeker.sheets.core.models.base.rememberUseCaseState
+import com.maxkeppeler.sheets.duration.DurationDialog
+import com.maxkeppeler.sheets.duration.models.DurationConfig
+import com.maxkeppeler.sheets.duration.models.DurationFormat
+import com.maxkeppeler.sheets.duration.models.DurationSelection
 import kotlinx.coroutines.flow.collectLatest
 
-@SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
 @OptIn(ExperimentalMaterial3Api::class)
+@SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
 @Composable
 fun Home(
     navHostController: NavHostController,
@@ -43,6 +54,52 @@ fun Home(
 ) {
     val context = LocalContext.current
     val state = viewModel.state.value
+
+    val timerState = rememberUseCaseState()
+    val roundState = rememberUseCaseState()
+    var option: ChooseOptionEnum? = null
+
+    DurationDialog(
+        state = timerState,
+        selection = DurationSelection(
+            positiveButton = SelectionButton(
+                text = "Apply"
+            ),
+            onPositiveClick = {
+                when(option) {
+                    ChooseOptionEnum.PrepareTime -> {
+                        viewModel.onEvent(HomeEvent.setPrepareTime(it))
+                    }
+                    ChooseOptionEnum.RoundTime -> {
+                        viewModel.onEvent(HomeEvent.setRoundTime(it))
+                    }
+                    ChooseOptionEnum.BreakTime -> {
+                        viewModel.onEvent(HomeEvent.setBreakTime(it))
+                    }
+                    null -> { }
+                }
+                option = null
+            }
+        ),
+        config = DurationConfig(
+            timeFormat = DurationFormat.MM_SS
+        )
+    )
+
+    DurationDialog(
+        state = roundState,
+        selection = DurationSelection(
+            positiveButton = SelectionButton(
+                text = "Apply"
+            ),
+            onPositiveClick = {
+                viewModel.onEvent(HomeEvent.setRounds(it))
+            }
+        ),
+        config = DurationConfig(
+            timeFormat = DurationFormat.SS
+        )
+    )
 
     LaunchedEffect(key1 = true) {
         viewModel.eventFlow.collectLatest { event ->
@@ -116,7 +173,8 @@ fun Home(
                 text = "${state.timeToPrepare/60}:${if((state.timeToPrepare%60) < 10) "0" + state.timeToPrepare%60 else state.timeToPrepare%60}",
                 modifier = Modifier
                     .clickable {
-
+                        option = ChooseOptionEnum.PrepareTime
+                        timerState.show()
                     }
             )
             Spacer(modifier = Modifier.height(20.dp))
@@ -127,7 +185,8 @@ fun Home(
                 text = "${state.roundTime/60}:${if((state.roundTime%60) < 10) "0" + state.roundTime%60 else state.roundTime%60}",
                 modifier = Modifier
                     .clickable {
-
+                        option = ChooseOptionEnum.RoundTime
+                        timerState.show()
                     }
             )
             Spacer(modifier = Modifier.height(20.dp))
@@ -138,7 +197,8 @@ fun Home(
                 text = "${state.breakTime/60}:${if((state.breakTime%60) < 10) "0" + state.breakTime%60 else state.breakTime%60}",
                 modifier = Modifier
                     .clickable {
-
+                        option = ChooseOptionEnum.BreakTime
+                        timerState.show()
                     }
             )
             Spacer(modifier = Modifier.height(20.dp))
@@ -149,7 +209,7 @@ fun Home(
                 text = "${state.rounds}",
                 modifier = Modifier
                     .clickable {
-                        
+                        roundState.show()
                     }
             )
 
