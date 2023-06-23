@@ -17,10 +17,7 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
 import com.example.intervaltimer.future_intervalTimer.domain.model.TimerModel
-import com.example.intervaltimer.future_intervalTimer.present.Timer
 import com.example.intervaltimer.future_intervalTimer.present.util.screen.Screen
-import com.example.intervaltimer.ui.theme.Blue20
-import com.example.intervaltimer.ui.theme.Blue50
 
 @Composable
 fun HistoryItem(

@@ -2,6 +2,7 @@ package com.example.intervaltimer.future_intervalTimer.present.timer
 
 import android.content.Context
 import android.media.MediaPlayer
+import android.util.Log
 import androidx.compose.runtime.State
 import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
@@ -35,12 +36,14 @@ class TimerViewModel @Inject constructor(
                 _state.value = state.value.copy(
                     isStop = false
                 )
+                Log.d("Check start", "${_state.value.isStop}")
                 countingTime()
             }
             TimerEvent.Stop -> {
                 _state.value = state.value.copy(
                     isStop = true
                 )
+                Log.d("Check stop", "${_state.value.isStop}")
             }
         }
     }
@@ -48,7 +51,7 @@ class TimerViewModel @Inject constructor(
     private fun countingTime() {
         viewModelScope.launch {
             while (!_state.value.isStop) {
-                delay(1000)
+                delay(100)
                 _state.value = state.value.copy(
                     currentTime = _state.value.currentTime - 1
                 )
@@ -57,7 +60,7 @@ class TimerViewModel @Inject constructor(
                     when (_state.value.currentStatus) {
                         TimerStateEnum.Preparing -> {
                             _state.value = state.value.copy(
-                                currentTime = _timer.roundTime,
+                                currentTime = _timer.roundTime * 10,
                                 currentRound = 1,
                                 currentStatus = TimerStateEnum.Round
                             )
@@ -65,7 +68,7 @@ class TimerViewModel @Inject constructor(
                         TimerStateEnum.Round -> {
                             if (_state.value.currentRound != _timer.rounds) {
                                 _state.value = state.value.copy(
-                                    currentTime = _timer.delay,
+                                    currentTime = _timer.delay * 10,
                                     currentRound = _state.value.currentRound + 1,
                                     currentStatus = TimerStateEnum.Break
                                 )
@@ -75,7 +78,7 @@ class TimerViewModel @Inject constructor(
                         }
                         TimerStateEnum.Break -> {
                             _state.value = state.value.copy(
-                                currentTime = _timer.roundTime,
+                                currentTime = _timer.roundTime * 10,
                                 currentStatus = TimerStateEnum.Round
                             )
                         }
@@ -116,11 +119,13 @@ class TimerViewModel @Inject constructor(
         _timer = timerModel
 
         _state.value = state.value.copy(
-            currentTime = _timer.startTime,
+            currentTime = _timer.startTime * 10,
             currentRound = 0,
             isStop = false,
             currentStatus = TimerStateEnum.Preparing
         )
+
+        Log.d("Check state", "${_state.value.isStop}")
 
         countingTime()
     }

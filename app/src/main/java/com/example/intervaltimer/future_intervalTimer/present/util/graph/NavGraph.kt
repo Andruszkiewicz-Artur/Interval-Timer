@@ -8,7 +8,7 @@ import androidx.navigation.compose.composable
 import androidx.navigation.navArgument
 import com.example.intervaltimer.future_intervalTimer.domain.model.TimerModel
 import com.example.intervaltimer.future_intervalTimer.present.Home
-import com.example.intervaltimer.future_intervalTimer.present.Timer
+import com.example.intervaltimer.future_intervalTimer.present.TimerPresentation
 import com.example.intervaltimer.future_intervalTimer.present.history.compose.HistoryPresent
 import com.example.intervaltimer.future_intervalTimer.present.ownIntervalTimes.compose.OwnIntervalTimePresent
 import com.example.intervaltimer.future_intervalTimer.present.util.screen.Screen
@@ -17,7 +17,6 @@ import com.example.intervaltimer.future_intervalTimer.present.util.screen.Screen
 fun NavGraph(
     navHostController: NavHostController
 ) {
-    val navController: NavHostController
     NavHost(
         navController = navHostController,
         startDestination = Screen.Home.route
@@ -47,7 +46,7 @@ fun NavGraph(
                 }
             )
         ) {
-            Timer(
+            TimerPresentation(
                 navHostController = navHostController,
                 timer = TimerModel(
                     startTime = it.arguments?.getInt("startTime")!!.toInt(),

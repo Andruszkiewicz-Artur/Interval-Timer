@@ -6,7 +6,6 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.CircleShape
-import androidx.compose.material.Card
 import androidx.compose.material.Icon
 import androidx.compose.material.MaterialTheme
 import androidx.compose.runtime.Composable
@@ -19,7 +18,6 @@ import androidx.compose.ui.unit.dp
 @Composable
 fun ButtonTimerPresentation(
     icon: ImageVector,
-    isColor: Boolean = false,
     onClick: () -> Unit
 ) {
     val backGroundColor = MaterialTheme.colors.background
@@ -30,7 +28,7 @@ fun ButtonTimerPresentation(
         modifier = Modifier
             .shadow(
                 shape = CircleShape,
-                elevation = 15.dp
+                elevation = 5.dp
             )
             .size(80.dp)
             .background(
