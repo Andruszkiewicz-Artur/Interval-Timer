@@ -7,8 +7,7 @@ import androidx.compose.runtime.State
 import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.example.intervaltimer.core.Event.UiEvent
-import com.example.intervaltimer.future_intervalTimer.domain.model.IntervalTime
+import com.example.intervaltimer.R
 import com.example.intervaltimer.future_intervalTimer.domain.model.TimerModel
 import com.example.intervaltimer.future_intervalTimer.domain.use_case.intervalTime.IntervalTimeUseCases
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -19,7 +18,8 @@ import javax.inject.Inject
 
 @HiltViewModel
 class TimerViewModel @Inject constructor(
-    private val intervalTimeUseCases: IntervalTimeUseCases
+    private val intervalTimeUseCases: IntervalTimeUseCases,
+    private val context: Context
 ): ViewModel() {
 
     private val _shareFlow = MutableSharedFlow<TimerUiEvent>()
@@ -72,8 +72,10 @@ class TimerViewModel @Inject constructor(
                                     currentRound = _state.value.currentRound + 1,
                                     currentStatus = TimerStateEnum.Break
                                 )
+                                playAudio(context, R.raw.gong)
                             } else {
                                 shareFlow.emit(TimerUiEvent.Finish)
+                                playAudio(context, R.raw.bell_finish)
                             }
                         }
                         TimerStateEnum.Break -> {
@@ -81,6 +83,7 @@ class TimerViewModel @Inject constructor(
                                 currentTime = _timer.roundTime * 10,
                                 currentStatus = TimerStateEnum.Round
                             )
+                            playAudio(context, R.raw.bell_soon)
                         }
                     }
                 }
