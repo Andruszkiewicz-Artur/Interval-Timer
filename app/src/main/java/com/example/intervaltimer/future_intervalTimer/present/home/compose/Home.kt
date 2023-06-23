@@ -13,6 +13,8 @@ import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.History
+import androidx.compose.material.icons.filled.Timer
 import androidx.compose.material.icons.outlined.Star
 import androidx.compose.material.icons.outlined.StarBorder
 import androidx.compose.material3.*
@@ -31,6 +33,7 @@ import com.example.intervaltimer.future_intervalTimer.domain.model.ChooseOptionE
 import com.example.intervaltimer.future_intervalTimer.present.home.HomeEvent
 import com.example.intervaltimer.future_intervalTimer.present.home.HomeViewModel
 import com.example.intervaltimer.future_intervalTimer.present.home.compose.CurrentChoosePresentation
+import com.example.intervaltimer.future_intervalTimer.present.home.compose.HomeButton
 import com.maxkeppeker.sheets.core.models.base.SelectionButton
 import com.maxkeppeker.sheets.core.models.base.rememberUseCaseState
 import com.maxkeppeler.sheets.duration.DurationDialog
@@ -143,25 +146,39 @@ fun Home(
         }
     ) {
         Column(
-            verticalArrangement = Arrangement.Center,
             horizontalAlignment = Alignment.CenterHorizontally,
             modifier = Modifier
                 .fillMaxSize()
         ) {
-            Icon(
-                painter = painterResource(id = R.drawable.sound_sampler),
-                contentDescription = null,
-                tint = MaterialTheme.colorScheme.primary,
+            Row(
+                horizontalArrangement = Arrangement.Center,
+                verticalAlignment = Alignment.CenterVertically,
                 modifier = Modifier
-                    .padding(bottom = 40.dp)
-                    .size(200.dp)
-                    .clickable {
-                        navHostController.navigate(
-                            Screen.Timer.sendData(
-                                state.timer
-                            )
-                        )
-                    }
+                    .fillMaxWidth()
+                    .padding(top = 20.dp)
+            ) {
+                HomeButton(
+                    image = Icons.Filled.Timer,
+                    text = "Own Timers"
+                ) {
+                    navHostController.navigate(Screen.OwnIntervalTimers.route)
+                }
+
+                Spacer(modifier = Modifier.fillMaxWidth(0.6f))
+
+                HomeButton(
+                    image = Icons.Filled.History,
+                    text = "History"
+                ) {
+                    navHostController.navigate(Screen.History.route)
+                }
+            }
+
+            Text(
+                text = "Interval timer",
+                fontSize = MaterialTheme.typography.displayLarge.fontSize,
+                modifier = Modifier
+                    .padding(16.dp)
             )
 
             CurrentChoosePresentation(
@@ -192,31 +209,22 @@ fun Home(
             ) {
                 roundState.show()
             }
-
-            Spacer(modifier = Modifier.height(50.dp))
-            Button(
-                onClick = {
-                    navHostController.navigate(Screen.OwnIntervalTimers.route)
-                },
+            Spacer(modifier = Modifier.height(40.dp))
+            Icon(
+                painter = painterResource(id = R.drawable.sound_sampler),
+                contentDescription = null,
+                tint = MaterialTheme.colorScheme.primary,
                 modifier = Modifier
-                    .fillMaxWidth(0.5f)
-            ) {
-                Text(
-                    text = "Own Intervals"
-                )
-            }
-            Spacer(modifier = Modifier.height(20.dp))
-            Button(
-                onClick = {
-                    navHostController.navigate(Screen.History.route)
-                },
-                modifier = Modifier
-                    .fillMaxWidth(0.5f)
-            ) {
-                Text(
-                    text = "History"
-                )
-            }
+                    .padding(bottom = 40.dp)
+                    .size(200.dp)
+                    .clickable {
+                        navHostController.navigate(
+                            Screen.Timer.sendData(
+                                state.timer
+                            )
+                        )
+                    }
+            )
         }
     }
 }
