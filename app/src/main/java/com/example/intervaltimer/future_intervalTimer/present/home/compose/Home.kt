@@ -105,7 +105,11 @@ fun Home(
         viewModel.eventFlow.collectLatest { event ->
             when(event) {
                 is UiEvent.ShowToast -> {
-                    Toast.makeText(context, stringResource(id = event.message), Toast.LENGTH_LONG).show()
+                    Toast.makeText(
+                        context,
+                        context.getString(event.message),
+                        Toast.LENGTH_LONG
+                    ).show()
                 }
             }
         }

@@ -34,8 +34,11 @@ fun OwnIntervalTimePresent(
         viewModel.eventFlow.collectLatest { event ->
             when(event) {
                 is UiEvent.ShowToast -> {
-                    System.out.println(event.message)
-                    Toast.makeText(context, event.message, Toast.LENGTH_LONG).show()
+                    Toast.makeText(
+                        context,
+                        context.getString(event.message),
+                        Toast.LENGTH_LONG
+                    ).show()
                 }
             }
         }
