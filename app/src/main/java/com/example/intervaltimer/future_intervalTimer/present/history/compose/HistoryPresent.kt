@@ -8,11 +8,13 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
 import com.example.intervaltimer.future_intervalTimer.present.history.HistoryViewModel
+import com.example.intervaltimer.R
 
 @Composable
 fun HistoryPresent(
@@ -27,7 +29,7 @@ fun HistoryPresent(
             .fillMaxSize()
     ) {
         Text(
-            text = "History",
+            text = stringResource(id = R.string.History),
             style = MaterialTheme.typography.headlineLarge,
             modifier = Modifier
                 .fillMaxWidth()
@@ -54,7 +56,7 @@ fun HistoryPresent(
             }
         } else {
             Text(
-                text = "History is empty!",
+                text = stringResource(id = R.string.HistoryIsEmpty),
                 style = MaterialTheme.typography.titleSmall,
                 color = MaterialTheme.colorScheme.secondary,
                 textAlign = TextAlign.Center,

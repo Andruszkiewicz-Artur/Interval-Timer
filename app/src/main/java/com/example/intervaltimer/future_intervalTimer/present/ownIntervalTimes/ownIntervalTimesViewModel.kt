@@ -4,6 +4,7 @@ import androidx.compose.runtime.State
 import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.example.intervaltimer.R
 import com.example.intervaltimer.core.Event.UiEvent
 import com.example.intervaltimer.future_intervalTimer.domain.use_case.ownIntervalTime.OwnIntervalTimeUseCases
 import com.example.intervaltimer.future_intervalTimer.present.ownIntervalTimes.compose.OwnIntervalTimeEvent
@@ -36,7 +37,7 @@ class ownIntervalTimesViewModel @Inject constructor(
                 viewModelScope.launch {
                     ownIntervalTimeUseCases.deleteOwnIntervalTimeUseCase.invoke(event.ownIntervalTime)
                     getAllOwnIntervalTimes()
-                    _eventFlow.emit(UiEvent.ShowToast("Delete Interval Time"))
+                    _eventFlow.emit(UiEvent.ShowToast(R.string.DeleteIntervalTime))
                 }
             }
 

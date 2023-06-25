@@ -1,4 +1,20 @@
 <resources>
     <string name="app_name">Interval Timer</string>
     <string name="Apply">Apply</string>
+    <string name="YouAddNewIntervalTime">You Add new Interval Time!</string>
+    <string name="ProblemWithAddingNewTimer">Problem with adding new timer!</string>
+    <string name="IntervalTimeLikeThatExistAtNow">Interval time like that exist right now!</string>
+    <string name="OwnTimers">Own Timers</string>
+    <string name="History">History</string>
+    <string name="IntervalTimer">Interval Timer</string>
+    <string name="TimeToPrepare">Time to prepare</string>
+    <string name="RoundTime">Round Time</string>
+    <string name="BreakTime">Break Time</string>
+    <string name="Rounds">Rounds</string>
+    <string name="DeleteIntervalTime">Delete Interval Time</string>
+    <string name="DontHaveOwnTimers">You don`t have own interval timers at now!</string>
+    <string name="Preparing">Preparing</string>
+    <string name="Round">Round</string>
+    <string name="Break">Break</string>
+    <string name="HistoryIsEmpty">History is empty!</string>
 </resources>

@@ -6,6 +6,7 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.example.intervaltimer.R
 import com.example.intervaltimer.core.Event.UiEvent
 import com.example.intervaltimer.future_intervalTimer.domain.model.OwnIntervalTime
 import com.example.intervaltimer.future_intervalTimer.domain.model.TimerModel
@@ -47,11 +48,11 @@ class HomeViewModel @Inject constructor(
                     if(_state.value.timerExist == false) {
                         ownIntervalTimeUseCases.insertOwnIntervalTimeUseCase.invoke(_state.value.timer.toOwnIntervalTimer())
                         _state.value.ownIntervalTimes.add(_state.value.timer.toOwnIntervalTimer())
-                        _eventFlow.emit(UiEvent.ShowToast("You Add new Interval Time!"))
+                        _eventFlow.emit(UiEvent.ShowToast(R.string.YouAddNewIntervalTime))
                     } else if (_state.value.timerExist == null) {
-                        _eventFlow.emit(UiEvent.ShowToast("Problem with adding new timer!"))
+                        _eventFlow.emit(UiEvent.ShowToast(R.string.ProblemWithAddingNewTimer))
                     }else {
-                        _eventFlow.emit(UiEvent.ShowToast("Interval Time like that exist at now!"))
+                        _eventFlow.emit(UiEvent.ShowToast(R.string.IntervalTimeLikeThatExistAtNow))
                     }
                 }
             }

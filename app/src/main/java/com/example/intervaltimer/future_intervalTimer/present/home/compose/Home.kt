@@ -90,7 +90,7 @@ fun Home(
         selection = DurationSelection(
             negativeButton = null,
             positiveButton = SelectionButton(
-                text = "Apply"
+                text = stringResource(id = R.string.Apply)
             ),
             onPositiveClick = {
                 viewModel.onEvent(HomeEvent.setRounds(it))
@@ -105,7 +105,7 @@ fun Home(
         viewModel.eventFlow.collectLatest { event ->
             when(event) {
                 is UiEvent.ShowToast -> {
-                    Toast.makeText(context, event.message, Toast.LENGTH_LONG).show()
+                    Toast.makeText(context, stringResource(id = event.message), Toast.LENGTH_LONG).show()
                 }
             }
         }
@@ -162,7 +162,7 @@ fun Home(
             ) {
                 HomeButton(
                     image = Icons.Filled.Timer,
-                    text = "Own Timers"
+                    text = stringResource(id = R.string.OwnTimers)
                 ) {
                     navHostController.navigate(Screen.OwnIntervalTimers.route)
                 }
@@ -171,14 +171,14 @@ fun Home(
 
                 HomeButton(
                     image = Icons.Filled.History,
-                    text = "History"
+                    text = stringResource(id = R.string.History)
                 ) {
                     navHostController.navigate(Screen.History.route)
                 }
             }
 
             Text(
-                text = "Interval timer",
+                text = stringResource(id = R.string.IntervalTimer),
                 fontSize = MaterialTheme.typography.displayLarge.fontSize,
                 modifier = Modifier
                     .padding(16.dp)
@@ -186,28 +186,28 @@ fun Home(
 
             CurrentChoosePresentation(
                 time = state.timer.startTime,
-                text = "Time to prepare"
+                text = stringResource(id = R.string.TimeToPrepare)
             ) {
                 option = ChooseOptionEnum.PrepareTime
                 timerState.show()
             }
             CurrentChoosePresentation(
                 time = state.timer.roundTime,
-                text = "Round Time"
+                text = stringResource(id = R.string.RoundTime)
             ) {
                 option = ChooseOptionEnum.RoundTime
                 timerState.show()
             }
             CurrentChoosePresentation(
                 time = state.timer.delay,
-                text = "Break Time"
+                text = stringResource(id = R.string.BreakTime)
             ) {
                 option = ChooseOptionEnum.BreakTime
                 timerState.show()
             }
             CurrentChoosePresentation(
                 time = state.timer.rounds,
-                text = "Rounds",
+                text = stringResource(id = R.string.Rounds),
                 isTimer = false
             ) {
                 roundState.show()

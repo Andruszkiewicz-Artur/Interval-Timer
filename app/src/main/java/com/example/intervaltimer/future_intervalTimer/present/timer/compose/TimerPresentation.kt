@@ -13,10 +13,12 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
+import com.example.intervaltimer.R
 import com.example.intervaltimer.future_intervalTimer.domain.model.TimerModel
 import com.example.intervaltimer.future_intervalTimer.present.timer.TimerEvent
 import com.example.intervaltimer.future_intervalTimer.present.timer.TimerStateEnum
@@ -77,21 +79,21 @@ fun TimerPresentation(
             when(it) {
                 TimerStateEnum.Preparing -> {
                     Text(
-                        text = "Preparing",
+                        text = stringResource(id = R.string.Preparing),
                         fontSize = MaterialTheme.typography.h2.fontSize,
                         fontWeight = FontWeight.Bold
                     )
                 }
                 TimerStateEnum.Round -> {
                     Text(
-                        text = "Round",
+                        text = stringResource(id = R.string.Round),
                         fontSize = MaterialTheme.typography.h2.fontSize,
                         fontWeight = FontWeight.Bold
                     )
                 }
                 TimerStateEnum.Break -> {
                     Text(
-                        text = "Break",
+                        text = stringResource(id = R.string.Break),
                         fontSize = MaterialTheme.typography.h2.fontSize,
                         fontWeight = FontWeight.Bold
                     )

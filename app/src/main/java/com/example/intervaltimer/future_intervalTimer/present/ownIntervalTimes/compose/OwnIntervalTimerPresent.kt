@@ -11,6 +11,7 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
@@ -18,6 +19,7 @@ import androidx.navigation.NavHostController
 import com.example.intervaltimer.core.Event.UiEvent
 import com.example.intervaltimer.future_intervalTimer.present.ownIntervalTimes.ownIntervalTimesViewModel
 import kotlinx.coroutines.flow.collectLatest
+import com.example.intervaltimer.R
 
 @Composable
 fun OwnIntervalTimePresent(
@@ -43,7 +45,7 @@ fun OwnIntervalTimePresent(
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
         Text(
-            text = "Your own Interval Times",
+            text = stringResource(id = R.string.OwnTimers),
             style = MaterialTheme.typography.headlineLarge,
             modifier = Modifier
                 .fillMaxWidth()
@@ -69,7 +71,7 @@ fun OwnIntervalTimePresent(
             }
         } else {
             Text(
-                text = "You don`t have own interval timers at now!",
+                text = stringResource(id = R.string.DontHaveOwnTimers),
                 style = MaterialTheme.typography.titleSmall,
                 color = MaterialTheme.colorScheme.secondary,
                 textAlign = TextAlign.Center,
