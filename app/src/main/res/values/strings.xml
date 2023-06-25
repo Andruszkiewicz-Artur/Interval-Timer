@@ -1,3 +1,4 @@
 <resources>
     <string name="app_name">Interval Timer</string>
+    <string name="Apply">Apply</string>
 </resources>
