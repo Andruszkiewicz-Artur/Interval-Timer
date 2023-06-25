@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">Minuteur d`Intervalles</string>
+    <string name="Apply">Appliquer</string>
+    <string name="YouAddNewIntervalTime">Vous avez ajouté un nouveau temps d`intervalle !</string>
+    <string name="ProblemWithAddingNewTimer">Problème lors de l`ajout du nouveau minuteur !</string>
+    <string name="IntervalTimeLikeThatExistAtNow">Un temps d`intervalle similaire existe déjà !</string>
+    <string name="OwnTimers">Minuteries Personnelles</string>
+    <string name="History">Historique</string>
+    <string name="IntervalTimer">Minuteur d`Intervalles</string>
+    <string name="TimeToPrepare">Temps de préparation</string>
+    <string name="RoundTime">Temps de round</string>
+    <string name="BreakTime">Temps de pause</string>
+    <string name="Rounds">Rounds</string>
+    <string name="DeleteIntervalTime">Supprimer le temps d`intervalle</string>
+    <string name="DontHaveOwnTimers">Vous n`avez pas encore vos propres minuteurs d`intervalles !</string>
+    <string name="Preparing">Préparation</string>
+    <string name="Round">Round</string>
+    <string name="Break">Pause</string>
+    <string name="HistoryIsEmpty">L`historique est vide !</string>
+</resources>

@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">Temporizador de Intervalos</string>
+    <string name="Apply">Aplicar</string>
+    <string name="YouAddNewIntervalTime">¡Has agregado un nuevo tiempo de intervalo!</string>
+    <string name="ProblemWithAddingNewTimer">Problema al agregar un nuevo temporizador.</string>
+    <string name="IntervalTimeLikeThatExistAtNow">¡Ya existe un tiempo de intervalo como ese!</string>
+    <string name="OwnTimers">Temporizadores Propios</string>
+    <string name="History">Historial</string>
+    <string name="IntervalTimer">Temporizador de Intervalos</string>
+    <string name="TimeToPrepare">Tiempo de preparación</string>
+    <string name="RoundTime">Tiempo de ronda</string>
+    <string name="BreakTime">Tiempo de descanso</string>
+    <string name="Rounds">Rondas</string>
+    <string name="DeleteIntervalTime">Eliminar Tiempo de Intervalo</string>
+    <string name="DontHaveOwnTimers">¡No tienes tus propios temporizadores de intervalos en este momento!</string>
+    <string name="Preparing">Preparando</string>
+    <string name="Round">Ronda</string>
+    <string name="Break">Descanso</string>
+    <string name="HistoryIsEmpty">¡El historial está vacío!</string>
+</resources>

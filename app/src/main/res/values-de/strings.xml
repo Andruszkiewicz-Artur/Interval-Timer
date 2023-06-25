@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">Intervall-Timer</string>
+    <string name="Apply">Anwenden</string>
+    <string name="YouAddNewIntervalTime">Du hast eine neue Intervallzeit hinzugefügt!</string>
+    <string name="ProblemWithAddingNewTimer">Problem beim Hinzufügen eines neuen Timers!</string>
+    <string name="IntervalTimeLikeThatExistAtNow">Eine Intervallzeit wie diese existiert bereits!</string>
+    <string name="OwnTimers">Eigene Timer</string>
+    <string name="History">Verlauf</string>
+    <string name="IntervalTimer">Intervall-Timer</string>
+    <string name="TimeToPrepare">Vorbereitungszeit</string>
+    <string name="RoundTime">Rundenzeit</string>
+    <string name="BreakTime">Pausenzeit</string>
+    <string name="Rounds">Runden</string>
+    <string name="DeleteIntervalTime">Intervallzeit löschen</string>
+    <string name="DontHaveOwnTimers">Du hast derzeit keine eigenen Intervalltimer!</string>
+    <string name="Preparing">Vorbereitung</string>
+    <string name="Round">Runde</string>
+    <string name="Break">Pause</string>
+    <string name="HistoryIsEmpty">Der Verlauf ist leer!</string>
+</resources>

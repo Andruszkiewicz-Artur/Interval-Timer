@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">Timer Interwałowy</string>
+    <string name="Apply">Zastosuj</string>
+    <string name="YouAddNewIntervalTime">Dodano nowy czas interwału!</string>
+    <string name="ProblemWithAddingNewTimer">Problem z dodaniem nowego timera!</string>
+    <string name="IntervalTimeLikeThatExistAtNow">Czas interwału o podobnych parametrach już istnieje!</string>
+    <string name="OwnTimers">Własne Timery</string>
+    <string name="History">Historia</string>
+    <string name="IntervalTimer">Timer Interwałowy</string>
+    <string name="TimeToPrepare">Czas przygotowania</string>
+    <string name="RoundTime">Czas rundy</string>
+    <string name="BreakTime">Czas przerwy</string>
+    <string name="Rounds">Rundy</string>
+    <string name="DeleteIntervalTime">Usuń Czas Interwału</string>
+    <string name="DontHaveOwnTimers">Nie masz jeszcze własnych timerów interwałowych!</string>
+    <string name="Preparing">Przygotowanie</string>
+    <string name="Round">Runda</string>
+    <string name="Break">Przerwa</string>
+    <string name="HistoryIsEmpty">Historia jest pusta!</string>
+</resources>
