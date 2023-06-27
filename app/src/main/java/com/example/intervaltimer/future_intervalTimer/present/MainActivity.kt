@@ -27,13 +27,13 @@ import dagger.hilt.android.AndroidEntryPoint
 @AndroidEntryPoint
 class MainActivity : ComponentActivity() {
 
-    lateinit var navController: NavHostController
+    private lateinit var navController: NavHostController
     private var isBound by mutableStateOf(false)
-    private lateinit var stopwatchService: IntervalTimeService
+    private lateinit var intervalTimeService: IntervalTimeService
     private val connection = object : ServiceConnection {
         override fun onServiceConnected(className: ComponentName, service: IBinder) {
             val binder = service as IntervalTimeService.StopwatchBinder
-            stopwatchService = binder.getService()
+            intervalTimeService = binder.getService()
             isBound = true
         }
 
@@ -55,7 +55,12 @@ class MainActivity : ComponentActivity() {
             navController = rememberNavController()
 
             IntervalTimerTheme {
-                NavGraph(navHostController = navController)
+                if (isBound) {
+                    NavGraph(
+                        navHostController = navController,
+                        service = intervalTimeService
+                    )
+                }
             }
         }
 

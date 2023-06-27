@@ -1,5 +1,6 @@
 package com.example.intervaltimer.future_intervalTimer.present.util
 
+import androidx.compose.animation.ExperimentalAnimationApi
 import androidx.compose.runtime.Composable
 import androidx.navigation.NavHostController
 import androidx.navigation.NavType
@@ -7,15 +8,18 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.navArgument
 import com.example.intervaltimer.future_intervalTimer.domain.model.TimerModel
+import com.example.intervaltimer.future_intervalTimer.domain.service.IntervalTimeService
 import com.example.intervaltimer.future_intervalTimer.present.Home
 import com.example.intervaltimer.future_intervalTimer.present.TimerPresentation
 import com.example.intervaltimer.future_intervalTimer.present.history.compose.HistoryPresent
 import com.example.intervaltimer.future_intervalTimer.present.ownIntervalTimes.compose.OwnIntervalTimePresent
 import com.example.intervaltimer.future_intervalTimer.present.util.screen.Screen
 
+@OptIn(ExperimentalAnimationApi::class)
 @Composable
 fun NavGraph(
-    navHostController: NavHostController
+    navHostController: NavHostController,
+    service: IntervalTimeService
 ) {
     NavHost(
         navController = navHostController,
@@ -52,8 +56,9 @@ fun NavGraph(
                     startTime = it.arguments?.getInt("startTime")!!.toInt(),
                     roundTime = it.arguments?.getInt("roundTime")!!.toInt(),
                     delay = it.arguments?.getInt("delay")!!.toInt(),
-                    rounds = it.arguments?.getInt("rounds")!!.toInt()
-                )
+                    rounds = it.arguments?.getInt("rounds")!!.toInt(),
+                ),
+                service = service
             )
         }
         composable(

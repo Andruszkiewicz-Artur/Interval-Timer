@@ -3,6 +3,7 @@ package com.example.intervaltimer.future_intervalTimer.present
 import TimerGraphPresentation
 import android.annotation.SuppressLint
 import androidx.compose.animation.AnimatedContent
+import androidx.compose.animation.ExperimentalAnimationApi
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.icons.Icons
@@ -19,7 +20,10 @@ import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
 import com.example.intervaltimer.R
+import com.example.intervaltimer.core.global.globalTimer
+import com.example.intervaltimer.future_intervalTimer.domain.model.IntervalTimeState
 import com.example.intervaltimer.future_intervalTimer.domain.model.TimerModel
+import com.example.intervaltimer.future_intervalTimer.domain.service.IntervalTimeService
 import com.example.intervaltimer.future_intervalTimer.present.timer.TimerEvent
 import com.example.intervaltimer.future_intervalTimer.present.timer.TimerStateEnum
 import com.example.intervaltimer.future_intervalTimer.present.timer.TimerUiEvent
@@ -29,15 +33,22 @@ import com.example.intervaltimer.ui.theme.Green
 import com.example.intervaltimer.ui.theme.Purple
 import com.example.intervaltimer.ui.theme.Red
 import kotlinx.coroutines.flow.collectLatest
+import kotlin.time.DurationUnit
 
+@OptIn(ExperimentalAnimationApi::class)
 @SuppressLint("AutoboxingStateCreation")
 @Composable
 fun TimerPresentation(
     navHostController: NavHostController,
     timer: TimerModel,
-    viewModel: TimerViewModel = hiltViewModel()
+    viewModel: TimerViewModel = hiltViewModel(),
+    service: IntervalTimeService
 ) {
     val state = viewModel.state.value
+    val round = service.round.value
+    val roundState = service.status
+    val duration = service.duration
+    val stateTimer = service.currentState.value
 
     LaunchedEffect(key1 = true) {
         viewModel.setupTimer(timer)
@@ -50,6 +61,12 @@ fun TimerPresentation(
         }
     }
 
+    LaunchedEffect(key1 = stateTimer) {
+        if (stateTimer == IntervalTimeState.Canceled) {
+            navHostController.popBackStack()
+        }
+    }
+
 
     Column(
         horizontalAlignment = Alignment.CenterHorizontally,
@@ -57,15 +74,15 @@ fun TimerPresentation(
         modifier = Modifier.fillMaxSize()
     ) {
         TimerGraphPresentation(
-            indicatorValue = state.currentTime/10,
-            maxIndicatorValue = when (state.currentStatus) {
-                TimerStateEnum.Preparing -> timer.startTime
-                TimerStateEnum.Round -> timer.roundTime
-                TimerStateEnum.Break -> timer.delay
+            indicatorValue = duration.toInt(DurationUnit.SECONDS),
+            maxIndicatorValue = when (roundState) {
+                TimerStateEnum.Preparing -> globalTimer.startTime
+                TimerStateEnum.Round -> globalTimer.roundTime
+                TimerStateEnum.Break -> globalTimer.delay
             },
-            smallText = "${state.currentRound}/${timer.rounds}",
+            smallText = "${round}/${globalTimer.rounds}",
             canvasSize = 400.dp,
-            foregroundIndicatorColor = when (state.currentStatus) {
+            foregroundIndicatorColor = when (roundState) {
                 TimerStateEnum.Preparing -> Purple
                 TimerStateEnum.Round -> Green
                 TimerStateEnum.Break -> Red
@@ -74,7 +91,7 @@ fun TimerPresentation(
         )
 
         AnimatedContent(
-            targetState = state.currentStatus
+            targetState = roundState
         ) {
             when(it) {
                 TimerStateEnum.Preparing -> {
@@ -104,7 +121,7 @@ fun TimerPresentation(
         Spacer(modifier = Modifier.height(40.dp))
 
         AnimatedContent(
-            targetState = state.isStop,
+            targetState = stateTimer == IntervalTimeState.Stopped,
             contentAlignment = Alignment.Center,
             modifier = Modifier
                 .padding(16.dp)

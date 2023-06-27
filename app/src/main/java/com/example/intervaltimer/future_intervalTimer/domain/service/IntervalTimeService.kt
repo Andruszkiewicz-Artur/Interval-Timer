@@ -41,7 +41,8 @@ class IntervalTimeService : Service() {
 
     private val binder = StopwatchBinder()
 
-    private var duration: Duration = Duration.ZERO
+    var duration: Duration = Duration.ZERO
+        private set
     private lateinit var timer: Timer
 
     var status: TimerStateEnum = TimerStateEnum.Preparing

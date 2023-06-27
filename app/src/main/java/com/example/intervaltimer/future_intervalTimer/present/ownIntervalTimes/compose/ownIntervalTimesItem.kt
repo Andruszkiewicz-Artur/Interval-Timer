@@ -68,7 +68,6 @@ fun OwnIntervalTimesItem(
             modifier = Modifier
                 .size(40.dp)
                 .clickable {
-                    globalTimer = ownIntervalTime.toTimerModel()
                     viewModel.onEvent(OwnIntervalTimeEvent.DeleteOwnIntervalTime(ownIntervalTime))
                 }
         )
@@ -80,6 +79,7 @@ fun OwnIntervalTimesItem(
             modifier = Modifier
                 .size(40.dp)
                 .clickable {
+                    globalTimer = ownIntervalTime.toTimerModel()
                     navHostController.navigate(Screen.Timer.sendData(ownIntervalTime.toTimer()))
                 }
         )
