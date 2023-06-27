@@ -3,7 +3,9 @@
     xmlns:tools="http://schemas.android.com/tools"
     package="com.example.intervaltimer">
 
-    <uses-permission android:name="android.permission.POST_NOTIFICATIONS" />
+    <uses-permission android:name="android.permission.FOREGROUND_SERVICE"/>
+    <uses-permission android:name="android.permission.POST_NOTIFICATIONS"/>
+
     <application
         android:name=".IntervalTimeApp"
         android:allowBackup="true"
@@ -15,6 +17,10 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.IntervalTimer"
         tools:targetApi="31">
+        <service
+            android:name=".future_intervalTimer.domain.service.IntervalTimeService"
+            android:enabled="true"
+            android:exported="false"/>
         <activity
             android:name=".future_intervalTimer.present.MainActivity"
             android:exported="true"

@@ -30,7 +30,9 @@ import androidx.navigation.NavHostController
 import com.example.intervaltimer.R
 import com.example.intervaltimer.future_intervalTimer.present.util.screen.Screen
 import com.example.intervaltimer.core.Event.UiEvent
+import com.example.intervaltimer.core.constants.Constants
 import com.example.intervaltimer.future_intervalTimer.domain.model.ChooseOptionEnum
+import com.example.intervaltimer.future_intervalTimer.domain.service.ServiceHelper
 import com.example.intervaltimer.future_intervalTimer.present.home.HomeEvent
 import com.example.intervaltimer.future_intervalTimer.present.home.HomeViewModel
 import com.example.intervaltimer.future_intervalTimer.present.home.compose.CurrentChoosePresentation
@@ -113,6 +115,11 @@ fun Home(
                 }
             }
         }
+
+        ServiceHelper.triggerForegroundService(
+            context = context,
+            action = Constants.ACTION_SERVICE_START
+        )
     }
 
     Scaffold(

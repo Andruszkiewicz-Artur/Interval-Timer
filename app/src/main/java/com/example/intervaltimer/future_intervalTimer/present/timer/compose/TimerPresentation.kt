@@ -117,7 +117,7 @@ fun TimerPresentation(
                     ButtonTimerPresentation(
                         icon = Icons.Filled.Block
                     ) {
-                        navHostController.popBackStack()
+                        viewModel.onEvent(TimerEvent.Cancel)
                     }
                     Spacer(modifier = Modifier.fillMaxWidth(0.3f))
                     ButtonTimerPresentation(
