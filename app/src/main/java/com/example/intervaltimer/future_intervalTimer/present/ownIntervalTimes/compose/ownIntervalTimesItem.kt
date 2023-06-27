@@ -16,6 +16,8 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.vector.rememberVectorPainter
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
+import com.example.intervaltimer.core.global.globalTimer
+import com.example.intervaltimer.future_intervalTimer.domain.mappers.toTimerModel
 import com.example.intervaltimer.future_intervalTimer.domain.model.OwnIntervalTime
 import com.example.intervaltimer.future_intervalTimer.present.ownIntervalTimes.ownIntervalTimesViewModel
 import com.example.intervaltimer.future_intervalTimer.present.util.screen.Screen
@@ -66,6 +68,7 @@ fun OwnIntervalTimesItem(
             modifier = Modifier
                 .size(40.dp)
                 .clickable {
+                    globalTimer = ownIntervalTime.toTimerModel()
                     viewModel.onEvent(OwnIntervalTimeEvent.DeleteOwnIntervalTime(ownIntervalTime))
                 }
         )

@@ -16,6 +16,7 @@ import androidx.compose.ui.graphics.vector.rememberVectorPainter
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
+import com.example.intervaltimer.core.global.globalTimer
 import com.example.intervaltimer.future_intervalTimer.domain.model.TimerModel
 import com.example.intervaltimer.future_intervalTimer.present.util.screen.Screen
 
@@ -73,6 +74,7 @@ fun HistoryItem(
             modifier = Modifier
                 .size(40.dp)
                 .clickable {
+                    globalTimer = timer
                     navHostController.navigate(Screen.Timer.sendData(timer))
                 }
         )
