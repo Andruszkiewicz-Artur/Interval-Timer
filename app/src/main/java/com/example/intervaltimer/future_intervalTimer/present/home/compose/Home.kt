@@ -31,6 +31,7 @@ import com.example.intervaltimer.R
 import com.example.intervaltimer.future_intervalTimer.present.util.screen.Screen
 import com.example.intervaltimer.core.Event.UiEvent
 import com.example.intervaltimer.core.constants.Constants
+import com.example.intervaltimer.core.global.globalTimer
 import com.example.intervaltimer.future_intervalTimer.domain.model.ChooseOptionEnum
 import com.example.intervaltimer.future_intervalTimer.domain.service.ServiceHelper
 import com.example.intervaltimer.future_intervalTimer.present.home.HomeEvent
@@ -232,6 +233,7 @@ fun Home(
                     .padding(bottom = 40.dp)
                     .size(200.dp)
                     .clickable {
+                        globalTimer = state.timer
                         navHostController.navigate(
                             Screen.Timer.sendData(
                                 state.timer
