@@ -80,7 +80,7 @@ fun OwnIntervalTimesItem(
                 .size(40.dp)
                 .clickable {
                     globalTimer = ownIntervalTime.toTimerModel()
-                    navHostController.navigate(Screen.Timer.sendData(ownIntervalTime.toTimer()))
+                    navHostController.navigate(Screen.Timer.route)
                 }
         )
     }

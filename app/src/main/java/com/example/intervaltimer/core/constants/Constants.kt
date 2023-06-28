@@ -11,8 +11,12 @@ object Constants {
     const val NOTIFICATION_CHANNEL_NAME = "STOPWATCH_NOTIFICATION"
     const val NOTIFICATION_ID = 10
 
+    const val TIMER_URI = "TIMER_URI"
+    const val IS_FROM_NOTIFICATION = "IS_FROM_NOTIFICATION"
+
     const val CLICK_REQUEST_CODE = 100
     const val CANCEL_REQUEST_CODE = 101
     const val STOP_REQUEST_CODE = 102
     const val RESUME_REQUEST_CODE = 103
+    const val CLICK_PENDING_INTENT = 104
 }

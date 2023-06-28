@@ -75,7 +75,7 @@ fun HistoryItem(
                 .size(40.dp)
                 .clickable {
                     globalTimer = timer
-                    navHostController.navigate(Screen.Timer.sendData(timer))
+                    navHostController.navigate(Screen.Timer.route)
                 }
         )
     }

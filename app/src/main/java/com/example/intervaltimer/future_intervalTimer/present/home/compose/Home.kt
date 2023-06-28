@@ -3,6 +3,7 @@
 package com.example.intervaltimer.future_intervalTimer.present
 
 import android.annotation.SuppressLint
+import android.util.Log
 import android.widget.Toast
 import androidx.compose.animation.AnimatedContent
 import androidx.compose.animation.ExperimentalAnimationApi
@@ -33,6 +34,8 @@ import com.example.intervaltimer.core.Event.UiEvent
 import com.example.intervaltimer.core.constants.Constants
 import com.example.intervaltimer.core.global.globalTimer
 import com.example.intervaltimer.future_intervalTimer.domain.model.ChooseOptionEnum
+import com.example.intervaltimer.future_intervalTimer.domain.model.IntervalTimeState
+import com.example.intervaltimer.future_intervalTimer.domain.service.IntervalTimeService
 import com.example.intervaltimer.future_intervalTimer.domain.service.ServiceHelper
 import com.example.intervaltimer.future_intervalTimer.present.home.HomeEvent
 import com.example.intervaltimer.future_intervalTimer.present.home.HomeViewModel
@@ -51,7 +54,8 @@ import kotlinx.coroutines.flow.collectLatest
 @Composable
 fun Home(
     navHostController: NavHostController,
-    viewModel: HomeViewModel = hiltViewModel()
+    viewModel: HomeViewModel = hiltViewModel(),
+    service: IntervalTimeService
 ) {
     val context = LocalContext.current
     val state = viewModel.state.value
@@ -59,6 +63,14 @@ fun Home(
     val timerState = rememberUseCaseState()
     val roundState = rememberUseCaseState()
     var option: ChooseOptionEnum? = null
+    val currentState = service.currentState.value
+
+    LaunchedEffect(key1 = currentState) {
+        Log.d("Check current state", "${currentState != IntervalTimeState.Idle && currentState != IntervalTimeState.Canceled}")
+        if (currentState != IntervalTimeState.Idle && currentState != IntervalTimeState.Canceled) {
+            navHostController.navigate(Screen.Timer.route)
+        }
+    }
 
     DurationDialog(
         state = timerState,
@@ -234,10 +246,9 @@ fun Home(
                     .size(200.dp)
                     .clickable {
                         globalTimer = state.timer
-                        navHostController.navigate(
-                            Screen.Timer.sendData(
-                                state.timer
-                            )
+                        ServiceHelper.triggerForegroundService(
+                            context = context,
+                            action = Constants.ACTION_SERVICE_START
                         )
                     }
             )

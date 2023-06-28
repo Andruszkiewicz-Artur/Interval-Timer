@@ -22,10 +22,9 @@ import androidx.navigation.NavHostController
 import com.example.intervaltimer.R
 import com.example.intervaltimer.core.global.globalTimer
 import com.example.intervaltimer.future_intervalTimer.domain.model.IntervalTimeState
-import com.example.intervaltimer.future_intervalTimer.domain.model.TimerModel
+import com.example.intervaltimer.future_intervalTimer.domain.model.TimerStateEnum
 import com.example.intervaltimer.future_intervalTimer.domain.service.IntervalTimeService
 import com.example.intervaltimer.future_intervalTimer.present.timer.TimerEvent
-import com.example.intervaltimer.future_intervalTimer.present.timer.TimerStateEnum
 import com.example.intervaltimer.future_intervalTimer.present.timer.TimerUiEvent
 import com.example.intervaltimer.future_intervalTimer.present.timer.TimerViewModel
 import com.example.intervaltimer.future_intervalTimer.present.timer.compose.ButtonTimerPresentation
@@ -33,6 +32,7 @@ import com.example.intervaltimer.ui.theme.Green
 import com.example.intervaltimer.ui.theme.Purple
 import com.example.intervaltimer.ui.theme.Red
 import kotlinx.coroutines.flow.collectLatest
+import kotlin.time.Duration
 import kotlin.time.DurationUnit
 
 @OptIn(ExperimentalAnimationApi::class)
@@ -40,18 +40,15 @@ import kotlin.time.DurationUnit
 @Composable
 fun TimerPresentation(
     navHostController: NavHostController,
-    timer: TimerModel,
     viewModel: TimerViewModel = hiltViewModel(),
     service: IntervalTimeService
 ) {
-    val state = viewModel.state.value
-    val round = service.round.value
-    val roundState = service.status
-    val duration = service.duration
+    val round = service.round.intValue
+    val roundState = service.status.value
+    val duration = service.duration.value
     val stateTimer = service.currentState.value
 
     LaunchedEffect(key1 = true) {
-        viewModel.setupTimer(timer)
         viewModel.shareFlow.collectLatest { event ->
             when(event) {
                 is TimerUiEvent.Finish -> {
@@ -62,7 +59,7 @@ fun TimerPresentation(
     }
 
     LaunchedEffect(key1 = stateTimer) {
-        if (stateTimer == IntervalTimeState.Canceled) {
+        if (stateTimer == IntervalTimeState.Canceled || stateTimer == IntervalTimeState.Idle) {
             navHostController.popBackStack()
         }
     }

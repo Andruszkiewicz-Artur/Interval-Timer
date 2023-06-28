@@ -1,5 +1,6 @@
 package com.example.intervaltimer.future_intervalTimer.present.util.screen
 
+import com.example.intervaltimer.core.constants.Constants
 import com.example.intervaltimer.future_intervalTimer.domain.model.TimerModel
 
 sealed class Screen(
@@ -11,13 +12,7 @@ sealed class Screen(
 
     object Timer: Screen(
         route = "timer"
-    ) {
-        fun sendData(
-            timer: TimerModel
-        ): String {
-            return "timer/${timer.startTime}/${timer.roundTime}/${timer.delay}/${timer.rounds}"
-        }
-    }
+    )
 
     object History: Screen(
         route = "history"

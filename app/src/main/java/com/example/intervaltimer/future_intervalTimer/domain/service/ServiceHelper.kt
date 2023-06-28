@@ -1,9 +1,12 @@
 package com.example.intervaltimer.future_intervalTimer.domain.service
 
 import android.app.PendingIntent
+import android.app.TaskStackBuilder
 import android.content.Context
 import android.content.Intent
 import androidx.compose.animation.ExperimentalAnimationApi
+import androidx.core.net.toUri
+import com.example.intervaltimer.core.constants.Constants
 import com.example.intervaltimer.core.constants.Constants.CANCEL_REQUEST_CODE
 import com.example.intervaltimer.core.constants.Constants.CLICK_REQUEST_CODE
 import com.example.intervaltimer.core.constants.Constants.RESUME_REQUEST_CODE
@@ -15,7 +18,7 @@ import com.example.intervaltimer.future_intervalTimer.present.MainActivity
 @ExperimentalAnimationApi
 object ServiceHelper {
 
-    private val flag = PendingIntent.FLAG_IMMUTABLE
+    private const val flag = PendingIntent.FLAG_IMMUTABLE
 
     fun clickPendingIntent(context: Context): PendingIntent {
         val clickIntent = Intent(context, MainActivity::class.java).apply {

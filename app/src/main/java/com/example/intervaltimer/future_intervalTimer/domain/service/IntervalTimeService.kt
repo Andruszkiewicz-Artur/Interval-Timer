@@ -6,8 +6,8 @@ import android.app.NotificationManager
 import android.app.Service
 import android.content.Intent
 import android.os.Binder
-import android.util.Log
 import androidx.compose.animation.ExperimentalAnimationApi
+import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.core.app.NotificationCompat
@@ -23,7 +23,7 @@ import com.example.intervaltimer.core.extensions.pad
 import com.example.intervaltimer.core.global.globalTimer
 import com.example.intervaltimer.future_intervalTimer.domain.model.IntervalTimeState
 import com.example.intervaltimer.future_intervalTimer.domain.model.TimerModel
-import com.example.intervaltimer.future_intervalTimer.present.timer.TimerStateEnum
+import com.example.intervaltimer.future_intervalTimer.domain.model.TimerStateEnum
 import dagger.hilt.android.AndroidEntryPoint
 import java.util.Timer
 import javax.inject.Inject
@@ -41,11 +41,11 @@ class IntervalTimeService : Service() {
 
     private val binder = StopwatchBinder()
 
-    var duration: Duration = Duration.ZERO
+    var duration: MutableState<Duration> = mutableStateOf(Duration.ZERO)
         private set
     private lateinit var timer: Timer
 
-    var status: TimerStateEnum = TimerStateEnum.Preparing
+    var status: MutableState<TimerStateEnum> = mutableStateOf(TimerStateEnum.Preparing)
         private set
 
     private var timerSetUp: TimerModel = globalTimer
@@ -87,8 +87,8 @@ class IntervalTimeService : Service() {
                     if(!isLoaded) {
                         isLoaded = true
                         timerSetUp = globalTimer
-                        duration = duration.plus(timerSetUp.startTime.seconds)
-                        status = TimerStateEnum.Preparing
+                        duration.value = duration.value.plus(timerSetUp.startTime.seconds)
+                        status.value = TimerStateEnum.Preparing
                     }
                     setStopButton()
                     startForegroundService()
@@ -115,14 +115,14 @@ class IntervalTimeService : Service() {
     private fun startStopwatch(onTick: (m: String, s: String) -> Unit) {
         currentState.value = IntervalTimeState.Started
         timer = fixedRateTimer(initialDelay = 1000L, period = 1000L) {
-            duration = duration.minus(1.seconds)
+            duration.value = duration.value.minus(1.seconds)
             updateTimeUnits()
             onTick(minutes.value, seconds.value)
-            if (duration == Duration.ZERO) {
-                when (status) {
+            if (duration.value == Duration.ZERO) {
+                when (status.value) {
                     TimerStateEnum.Preparing -> {
-                        duration = duration.plus(timerSetUp.roundTime.seconds)
-                        status = TimerStateEnum.Round
+                        duration.value = duration.value.plus(timerSetUp.roundTime.seconds)
+                        status.value = TimerStateEnum.Round
                         round.value = round.value + 1
                     }
                     TimerStateEnum.Round -> {
@@ -131,13 +131,13 @@ class IntervalTimeService : Service() {
                             cancelStopwatch()
                             stopForegroundService()
                         } else {
-                            duration = duration.plus(timerSetUp.delay.seconds)
-                            status = TimerStateEnum.Break
+                            duration.value = duration.value.plus(timerSetUp.delay.seconds)
+                            status.value = TimerStateEnum.Break
                         }
                     }
                     TimerStateEnum.Break -> {
-                        duration = duration.plus(timerSetUp.roundTime.seconds)
-                        status = TimerStateEnum.Round
+                        duration.value = duration.value.plus(timerSetUp.roundTime.seconds)
+                        status.value = TimerStateEnum.Round
                         round.value = round.value + 1
                     }
                 }
@@ -153,13 +153,13 @@ class IntervalTimeService : Service() {
     }
 
     private fun cancelStopwatch() {
-        duration = Duration.ZERO
+        duration.value = Duration.ZERO
         currentState.value = IntervalTimeState.Idle
         updateTimeUnits()
     }
 
     private fun updateTimeUnits() {
-        duration.toComponents { _, minutes, seconds, _ ->
+        duration.value.toComponents { _, minutes, seconds, _ ->
             this@IntervalTimeService.minutes.value = minutes.pad()
             this@IntervalTimeService.seconds.value = seconds.pad()
         }
@@ -193,7 +193,7 @@ class IntervalTimeService : Service() {
                 formatTime(
                     seconds, minutes
                 ) + "\n${round.value}/${globalTimer.rounds}"
-            ).setContentTitle(status.name)
+            ).setContentTitle(status.value.name)
                 .build()
         )
     }
