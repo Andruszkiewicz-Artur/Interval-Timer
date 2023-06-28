@@ -7,6 +7,7 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
@@ -20,7 +21,7 @@ fun HistoryPresent(
     navHostController: NavHostController,
     viewModel: HistoryViewModel = hiltViewModel()
 ) {
-
+    val context = LocalContext.current
     val intervalTimes = viewModel.state.value.intervalTimes
 
     Column(
@@ -49,7 +50,8 @@ fun HistoryPresent(
                 items(intervalTimes) { intervatTimer ->
                     HistoryItem(
                         navHostController = navHostController,
-                        timer = intervatTimer.toTimer()
+                        timer = intervatTimer.toTimer(),
+                        context = context
                     )
                 }
             }

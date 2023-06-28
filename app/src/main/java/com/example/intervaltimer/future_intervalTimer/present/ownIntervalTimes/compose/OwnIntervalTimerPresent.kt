@@ -68,7 +68,8 @@ fun OwnIntervalTimePresent(
                     OwnIntervalTimesItem(
                         navHostController = navHostController,
                         ownIntervalTime = ownIntervalTime,
-                        viewModel = viewModel
+                        viewModel = viewModel,
+                        context = context
                     )
                 }
             }

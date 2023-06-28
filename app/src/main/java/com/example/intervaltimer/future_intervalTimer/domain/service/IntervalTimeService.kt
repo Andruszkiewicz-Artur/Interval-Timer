@@ -54,7 +54,6 @@ class IntervalTimeService : Service() {
         private set
 
     private var timerSetUp: TimerModel = globalTimer
-    private var isLoaded: Boolean = false
     var round = mutableIntStateOf(0)
         private set
     var seconds = mutableStateOf("00")
@@ -83,17 +82,16 @@ class IntervalTimeService : Service() {
                 stopStopwatch()
                 cancelStopwatch()
                 stopForegroundService()
-                isLoaded = false
             }
         }
         intent?.action.let {
             when (it) {
                 ACTION_SERVICE_START -> {
-                    if(!isLoaded) {
-                        isLoaded = true
+                    if(currentState.value == IntervalTimeState.Idle) {
                         timerSetUp = globalTimer
                         duration.value = duration.value.plus(timerSetUp.startTime.seconds)
                         status.value = TimerStateEnum.Preparing
+                        round.value = 0
                     }
                     setStopButton()
                     startForegroundService()
@@ -109,7 +107,6 @@ class IntervalTimeService : Service() {
                     stopStopwatch()
                     cancelStopwatch()
                     stopForegroundService()
-                    isLoaded = false
                 }
             }
         }
@@ -128,7 +125,7 @@ class IntervalTimeService : Service() {
                     TimerStateEnum.Preparing -> {
                         duration.value = duration.value.plus(timerSetUp.roundTime.seconds)
                         status.value = TimerStateEnum.Round
-                        round.value = round.value + 1
+                        round.value = round.value.plus(1)
                         playAudio(context, R.raw.bell_soon)
                     }
                     TimerStateEnum.Round -> {
@@ -140,14 +137,14 @@ class IntervalTimeService : Service() {
                         } else {
                             duration.value = duration.value.plus(timerSetUp.delay.seconds)
                             status.value = TimerStateEnum.Break
-                            playAudio(context, R.raw.gong)
+                            playAudio(context, R.raw.bell_finish)
                         }
                     }
                     TimerStateEnum.Break -> {
                         duration.value = duration.value.plus(timerSetUp.roundTime.seconds)
                         status.value = TimerStateEnum.Round
-                        round.value = round.value + 1
-                        playAudio(context, R.raw.bell_finish)
+                        round.value = round.value.plus(1)
+                        playAudio(context, R.raw.bell_soon)
                     }
                 }
             }

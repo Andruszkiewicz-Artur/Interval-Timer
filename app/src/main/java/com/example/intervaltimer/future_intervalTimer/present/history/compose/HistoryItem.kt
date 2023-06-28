@@ -1,5 +1,7 @@
 package com.example.intervaltimer.future_intervalTimer.present.history.compose
 
+import android.content.Context
+import androidx.compose.animation.ExperimentalAnimationApi
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
@@ -16,14 +18,18 @@ import androidx.compose.ui.graphics.vector.rememberVectorPainter
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
+import com.example.intervaltimer.core.constants.Constants
 import com.example.intervaltimer.core.global.globalTimer
 import com.example.intervaltimer.future_intervalTimer.domain.model.TimerModel
+import com.example.intervaltimer.future_intervalTimer.domain.service.ServiceHelper
 import com.example.intervaltimer.future_intervalTimer.present.util.screen.Screen
 
+@OptIn(ExperimentalAnimationApi::class)
 @Composable
 fun HistoryItem(
     navHostController: NavHostController,
-    timer: TimerModel
+    timer: TimerModel,
+    context: Context
 ) {
 
     Row(
@@ -75,7 +81,11 @@ fun HistoryItem(
                 .size(40.dp)
                 .clickable {
                     globalTimer = timer
-                    navHostController.navigate(Screen.Timer.route)
+                    ServiceHelper.triggerForegroundService(
+                        context = context,
+                        action = Constants.ACTION_SERVICE_START
+                    )
+                    navHostController.popBackStack()
                 }
         )
     }

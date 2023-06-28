@@ -1,5 +1,7 @@
 package com.example.intervaltimer.future_intervalTimer.present.ownIntervalTimes.compose
 
+import android.content.Context
+import androidx.compose.animation.ExperimentalAnimationApi
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
@@ -14,20 +16,23 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.vector.rememberVectorPainter
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
+import com.example.intervaltimer.core.constants.Constants
 import com.example.intervaltimer.core.global.globalTimer
 import com.example.intervaltimer.future_intervalTimer.domain.mappers.toTimerModel
 import com.example.intervaltimer.future_intervalTimer.domain.model.OwnIntervalTime
+import com.example.intervaltimer.future_intervalTimer.domain.service.ServiceHelper
 import com.example.intervaltimer.future_intervalTimer.present.ownIntervalTimes.ownIntervalTimesViewModel
-import com.example.intervaltimer.future_intervalTimer.present.util.screen.Screen
-import com.example.intervaltimer.ui.theme.Blue50
 
+@OptIn(ExperimentalAnimationApi::class)
 @Composable
 fun OwnIntervalTimesItem(
     navHostController: NavHostController,
     ownIntervalTime: OwnIntervalTime,
-    viewModel: ownIntervalTimesViewModel
+    viewModel: ownIntervalTimesViewModel,
+    context: Context
 ) {
     Row(
         verticalAlignment = Alignment.CenterVertically,
@@ -80,7 +85,11 @@ fun OwnIntervalTimesItem(
                 .size(40.dp)
                 .clickable {
                     globalTimer = ownIntervalTime.toTimerModel()
-                    navHostController.navigate(Screen.Timer.route)
+                    ServiceHelper.triggerForegroundService(
+                        context = context,
+                        action = Constants.ACTION_SERVICE_START
+                    )
+                    navHostController.popBackStack()
                 }
         )
     }
