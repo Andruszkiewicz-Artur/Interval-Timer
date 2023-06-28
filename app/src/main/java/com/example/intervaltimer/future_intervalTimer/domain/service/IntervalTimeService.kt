@@ -4,13 +4,16 @@ import android.annotation.SuppressLint
 import android.app.NotificationChannel
 import android.app.NotificationManager
 import android.app.Service
+import android.content.Context
 import android.content.Intent
+import android.media.MediaPlayer
 import android.os.Binder
 import androidx.compose.animation.ExperimentalAnimationApi
 import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.core.app.NotificationCompat
+import com.example.intervaltimer.R
 import com.example.intervaltimer.core.constants.Constants.ACTION_SERVICE_CANCEL
 import com.example.intervaltimer.core.constants.Constants.ACTION_SERVICE_START
 import com.example.intervaltimer.core.constants.Constants.ACTION_SERVICE_STOP
@@ -38,6 +41,8 @@ class IntervalTimeService : Service() {
     lateinit var notificationManager: NotificationManager
     @Inject
     lateinit var notificationBuilder: NotificationCompat.Builder
+    @Inject
+    lateinit var context: Context
 
     private val binder = StopwatchBinder()
 
@@ -124,21 +129,25 @@ class IntervalTimeService : Service() {
                         duration.value = duration.value.plus(timerSetUp.roundTime.seconds)
                         status.value = TimerStateEnum.Round
                         round.value = round.value + 1
+                        playAudio(context, R.raw.bell_soon)
                     }
                     TimerStateEnum.Round -> {
                         if (round.value == timerSetUp.rounds) {
                             stopStopwatch()
                             cancelStopwatch()
                             stopForegroundService()
+                            playAudio(context, R.raw.bell_soon)
                         } else {
                             duration.value = duration.value.plus(timerSetUp.delay.seconds)
                             status.value = TimerStateEnum.Break
+                            playAudio(context, R.raw.gong)
                         }
                     }
                     TimerStateEnum.Break -> {
                         duration.value = duration.value.plus(timerSetUp.roundTime.seconds)
                         status.value = TimerStateEnum.Round
                         round.value = round.value + 1
+                        playAudio(context, R.raw.bell_finish)
                     }
                 }
             }
@@ -224,6 +233,33 @@ class IntervalTimeService : Service() {
             )
         )
         notificationManager.notify(NOTIFICATION_ID, notificationBuilder.build())
+    }
+
+    private fun playAudio(context: Context, id: Int) {
+
+        var mMediaPlayer: MediaPlayer
+
+        try {
+
+            mMediaPlayer = MediaPlayer()
+            mMediaPlayer = MediaPlayer.create(context, id)
+
+            mMediaPlayer.setOnPreparedListener {
+                mMediaPlayer.start()
+            }
+
+            mMediaPlayer.setOnCompletionListener {
+                mMediaPlayer.release()
+            }
+
+        }
+        catch (e: IllegalArgumentException) {
+            e.printStackTrace()
+        } catch (e: IllegalStateException) {
+            e.printStackTrace()
+        } catch (e: Exception) {
+            e.printStackTrace()
+        }
     }
 
     inner class StopwatchBinder : Binder() {

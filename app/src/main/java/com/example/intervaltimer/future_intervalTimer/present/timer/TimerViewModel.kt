@@ -53,31 +53,4 @@ class TimerViewModel @Inject constructor(
             }
         }
     }
-
-    private fun playAudio(context: Context, id: Int) {
-
-        var mMediaPlayer: MediaPlayer
-
-        try {
-
-            mMediaPlayer = MediaPlayer()
-            mMediaPlayer = MediaPlayer.create(context, id)
-
-            mMediaPlayer.setOnPreparedListener {
-                mMediaPlayer.start()
-            }
-
-            mMediaPlayer.setOnCompletionListener {
-                mMediaPlayer.release()
-            }
-
-        }
-        catch (e: IllegalArgumentException) {
-            e.printStackTrace()
-        } catch (e: IllegalStateException) {
-            e.printStackTrace()
-        } catch (e: Exception) {
-            e.printStackTrace()
-        }
-    }
 }
