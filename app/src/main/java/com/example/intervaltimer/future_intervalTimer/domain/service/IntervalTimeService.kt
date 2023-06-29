@@ -11,6 +11,7 @@ import android.os.Binder
 import androidx.compose.animation.ExperimentalAnimationApi
 import androidx.compose.runtime.State
 import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.core.app.NotificationCompat
 import com.example.intervaltimer.R
 import com.example.intervaltimer.core.constants.Constants.ACTION_SERVICE_CANCEL
@@ -23,13 +24,19 @@ import com.example.intervaltimer.core.constants.Constants.NOTIFICATION_ID
 import com.example.intervaltimer.core.extensions.formatTime
 import com.example.intervaltimer.core.extensions.pad
 import com.example.intervaltimer.core.global.globalTimer
+import com.example.intervaltimer.future_intervalTimer.domain.mappers.toIntervalTime
 import com.example.intervaltimer.future_intervalTimer.domain.model.IntervalTimeState
 import com.example.intervaltimer.future_intervalTimer.domain.model.TimerModel
 import com.example.intervaltimer.future_intervalTimer.domain.model.TimerStateEnum
+import com.example.intervaltimer.future_intervalTimer.domain.use_case.intervalTime.IntervalTimeUseCases
 import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
 import java.util.Timer
 import javax.inject.Inject
 import kotlin.concurrent.fixedRateTimer
+import kotlin.coroutines.CoroutineContext
 import kotlin.time.Duration.Companion.ZERO
 import kotlin.time.Duration.Companion.seconds
 import kotlin.time.DurationUnit
@@ -43,6 +50,10 @@ class IntervalTimeService : Service() {
     lateinit var notificationBuilder: NotificationCompat.Builder
     @Inject
     lateinit var context: Context
+    @Inject
+    lateinit var intervalTimeUseCases: IntervalTimeUseCases
+
+    private val serviceScope = CoroutineScope(Dispatchers.Main)
 
     private val binder = IntervalTimerBinder()
 
@@ -127,10 +138,13 @@ class IntervalTimeService : Service() {
                             cancelIntervalTimer()
                             stopForegroundService()
                             playAudio(context, R.raw.bell_soon)
+                            serviceScope.launch {
+                                intervalTimeUseCases.insertIntervalTimeUseCase.invoke(timerSetUp.toIntervalTimer())
+                            }
                         } else {
                             _state.value = state.value.copy(
                                 duration = _state.value.duration.plus(timerSetUp.delay.seconds),
-                                status = TimerStateEnum.Round,
+                                status = TimerStateEnum.Break
                             )
                             playAudio(context, R.raw.bell_finish)
                         }
