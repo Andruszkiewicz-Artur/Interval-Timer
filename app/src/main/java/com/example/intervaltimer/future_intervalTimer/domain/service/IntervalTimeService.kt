@@ -9,18 +9,17 @@ import android.content.Intent
 import android.media.MediaPlayer
 import android.os.Binder
 import androidx.compose.animation.ExperimentalAnimationApi
-import androidx.compose.runtime.MutableState
-import androidx.compose.runtime.mutableIntStateOf
+import androidx.compose.runtime.State
 import androidx.compose.runtime.mutableStateOf
 import androidx.core.app.NotificationCompat
 import com.example.intervaltimer.R
 import com.example.intervaltimer.core.constants.Constants.ACTION_SERVICE_CANCEL
 import com.example.intervaltimer.core.constants.Constants.ACTION_SERVICE_START
 import com.example.intervaltimer.core.constants.Constants.ACTION_SERVICE_STOP
+import com.example.intervaltimer.core.constants.Constants.INTERVAL_TIMER_STATE
 import com.example.intervaltimer.core.constants.Constants.NOTIFICATION_CHANNEL_ID
 import com.example.intervaltimer.core.constants.Constants.NOTIFICATION_CHANNEL_NAME
 import com.example.intervaltimer.core.constants.Constants.NOTIFICATION_ID
-import com.example.intervaltimer.core.constants.Constants.STOPWATCH_STATE
 import com.example.intervaltimer.core.extensions.formatTime
 import com.example.intervaltimer.core.extensions.pad
 import com.example.intervaltimer.core.global.globalTimer
@@ -31,8 +30,9 @@ import dagger.hilt.android.AndroidEntryPoint
 import java.util.Timer
 import javax.inject.Inject
 import kotlin.concurrent.fixedRateTimer
-import kotlin.time.Duration
+import kotlin.time.Duration.Companion.ZERO
 import kotlin.time.Duration.Companion.seconds
+import kotlin.time.DurationUnit
 
 @ExperimentalAnimationApi
 @AndroidEntryPoint
@@ -44,68 +44,56 @@ class IntervalTimeService : Service() {
     @Inject
     lateinit var context: Context
 
-    private val binder = StopwatchBinder()
+    private val binder = IntervalTimerBinder()
 
-    var duration: MutableState<Duration> = mutableStateOf(Duration.ZERO)
-        private set
     private lateinit var timer: Timer
 
-    var status: MutableState<TimerStateEnum> = mutableStateOf(TimerStateEnum.Preparing)
-        private set
-
     private var timerSetUp: TimerModel = globalTimer
-    var round = mutableIntStateOf(0)
-        private set
-    var seconds = mutableStateOf("00")
-        private set
-    var minutes = mutableStateOf("00")
-        private set
-    var currentState = mutableStateOf(IntervalTimeState.Idle)
-        private set
+
+    private val _state = mutableStateOf(StateIntervalTimerService())
+    val state: State<StateIntervalTimerService> = _state
 
     override fun onBind(p0: Intent?) = binder
 
     override fun onStartCommand(intent: Intent?, flags: Int, startId: Int): Int {
-        when (intent?.getStringExtra(STOPWATCH_STATE)) {
+        when (intent?.getStringExtra(INTERVAL_TIMER_STATE)) {
             IntervalTimeState.Started.name -> {
                 setStopButton()
                 startForegroundService()
-                startStopwatch { minutes, seconds ->
-                    updateNotification(minutes = minutes, seconds = seconds)
-                }
+                startIntervalTimer { }
             }
             IntervalTimeState.Stopped.name -> {
-                stopStopwatch()
+                stopIntervalTimer()
                 setResumeButton()
             }
             IntervalTimeState.Canceled.name -> {
-                stopStopwatch()
-                cancelStopwatch()
+                stopIntervalTimer()
+                cancelIntervalTimer()
                 stopForegroundService()
             }
         }
         intent?.action.let {
             when (it) {
                 ACTION_SERVICE_START -> {
-                    if(currentState.value == IntervalTimeState.Idle) {
+                    if(_state.value.currentState == IntervalTimeState.Idle) {
                         timerSetUp = globalTimer
-                        duration.value = duration.value.plus(timerSetUp.startTime.seconds)
-                        status.value = TimerStateEnum.Preparing
-                        round.value = 0
+                        _state.value = state.value.copy(
+                            duration = _state.value.duration.plus(timerSetUp.startTime.seconds),
+                            status = TimerStateEnum.Preparing,
+                            round = 0
+                        )
                     }
                     setStopButton()
                     startForegroundService()
-                    startStopwatch { minutes, seconds ->
-                        updateNotification(minutes = minutes, seconds = seconds)
-                    }
+                    startIntervalTimer { }
                 }
                 ACTION_SERVICE_STOP -> {
-                    stopStopwatch()
+                    stopIntervalTimer()
                     setResumeButton()
                 }
                 ACTION_SERVICE_CANCEL -> {
-                    stopStopwatch()
-                    cancelStopwatch()
+                    stopIntervalTimer()
+                    cancelIntervalTimer()
                     stopForegroundService()
                 }
             }
@@ -114,36 +102,45 @@ class IntervalTimeService : Service() {
     }
 
     @SuppressLint("AutoboxingStateValueProperty")
-    private fun startStopwatch(onTick: (m: String, s: String) -> Unit) {
-        currentState.value = IntervalTimeState.Started
+    private fun startIntervalTimer(onTick: () -> Unit) {
+        _state.value = state.value.copy(
+            currentState = IntervalTimeState.Started
+        )
         timer = fixedRateTimer(initialDelay = 1000L, period = 1000L) {
-            duration.value = duration.value.minus(1.seconds)
-            updateTimeUnits()
-            onTick(minutes.value, seconds.value)
-            if (duration.value == Duration.ZERO) {
-                when (status.value) {
+            _state.value = state.value.copy(
+                duration = _state.value.duration.minus(1.seconds)
+            )
+            onTick()
+            if (_state.value.duration == ZERO) {
+                when (_state.value.status) {
                     TimerStateEnum.Preparing -> {
-                        duration.value = duration.value.plus(timerSetUp.roundTime.seconds)
-                        status.value = TimerStateEnum.Round
-                        round.value = round.value.plus(1)
+                        _state.value = state.value.copy(
+                            duration = _state.value.duration.plus(timerSetUp.roundTime.seconds),
+                            status = TimerStateEnum.Round,
+                            round = _state.value.round + 1
+                        )
                         playAudio(context, R.raw.bell_soon)
                     }
                     TimerStateEnum.Round -> {
-                        if (round.value == timerSetUp.rounds) {
-                            stopStopwatch()
-                            cancelStopwatch()
+                        if (_state.value.round == timerSetUp.rounds) {
+                            stopIntervalTimer()
+                            cancelIntervalTimer()
                             stopForegroundService()
                             playAudio(context, R.raw.bell_soon)
                         } else {
-                            duration.value = duration.value.plus(timerSetUp.delay.seconds)
-                            status.value = TimerStateEnum.Break
+                            _state.value = state.value.copy(
+                                duration = _state.value.duration.plus(timerSetUp.delay.seconds),
+                                status = TimerStateEnum.Round,
+                            )
                             playAudio(context, R.raw.bell_finish)
                         }
                     }
                     TimerStateEnum.Break -> {
-                        duration.value = duration.value.plus(timerSetUp.roundTime.seconds)
-                        status.value = TimerStateEnum.Round
-                        round.value = round.value.plus(1)
+                        _state.value = state.value.copy(
+                            duration = _state.value.duration.plus(timerSetUp.roundTime.seconds),
+                            status = TimerStateEnum.Round,
+                            round = _state.value.round + 1
+                        )
                         playAudio(context, R.raw.bell_soon)
                     }
                 }
@@ -151,24 +148,20 @@ class IntervalTimeService : Service() {
         }
     }
 
-    private fun stopStopwatch() {
+    private fun stopIntervalTimer() {
         if (this::timer.isInitialized) {
             timer.cancel()
         }
-        currentState.value = IntervalTimeState.Stopped
+        _state.value = state.value.copy(
+            currentState = IntervalTimeState.Stopped
+        )
     }
 
-    private fun cancelStopwatch() {
-        duration.value = Duration.ZERO
-        currentState.value = IntervalTimeState.Idle
-        updateTimeUnits()
-    }
-
-    private fun updateTimeUnits() {
-        duration.value.toComponents { _, minutes, seconds, _ ->
-            this@IntervalTimeService.minutes.value = minutes.pad()
-            this@IntervalTimeService.seconds.value = seconds.pad()
-        }
+    private fun cancelIntervalTimer() {
+        _state.value = state.value.copy(
+            duration = ZERO,
+            currentState = IntervalTimeState.Idle
+        )
     }
 
     private fun startForegroundService() {
@@ -197,9 +190,10 @@ class IntervalTimeService : Service() {
             NOTIFICATION_ID,
             notificationBuilder.setContentText(
                 formatTime(
-                    seconds, minutes
-                ) + "\n${round.value}/${globalTimer.rounds}"
-            ).setContentTitle(status.value.name)
+                    seconds = (_state.value.duration.toInt(DurationUnit.SECONDS)%60).pad(),
+                    minutes = (_state.value.duration.toInt(DurationUnit.SECONDS)/60).pad()
+                ) + "\n${_state.value.round}/${globalTimer.rounds}"
+            ).setContentTitle(_state.value.status.name)
                 .build()
         )
     }
@@ -259,7 +253,7 @@ class IntervalTimeService : Service() {
         }
     }
 
-    inner class StopwatchBinder : Binder() {
+    inner class IntervalTimerBinder : Binder() {
         fun getService(): IntervalTimeService = this@IntervalTimeService
     }
 }

@@ -32,7 +32,7 @@ class MainActivity : ComponentActivity() {
     private lateinit var intervalTimeService: IntervalTimeService
     private val connection = object : ServiceConnection {
         override fun onServiceConnected(className: ComponentName, service: IBinder) {
-            val binder = service as IntervalTimeService.StopwatchBinder
+            val binder = service as IntervalTimeService.IntervalTimerBinder
             intervalTimeService = binder.getService()
             isBound = true
         }

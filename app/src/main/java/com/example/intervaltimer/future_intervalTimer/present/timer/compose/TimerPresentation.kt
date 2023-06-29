@@ -43,10 +43,7 @@ fun TimerPresentation(
     viewModel: TimerViewModel = hiltViewModel(),
     service: IntervalTimeService
 ) {
-    val round = service.round.intValue
-    val roundState = service.status.value
-    val duration = service.duration.value
-    val stateTimer = service.currentState.value
+    val state = service.state.value
 
     LaunchedEffect(key1 = true) {
         viewModel.shareFlow.collectLatest { event ->
@@ -58,8 +55,8 @@ fun TimerPresentation(
         }
     }
 
-    LaunchedEffect(key1 = stateTimer) {
-        if (stateTimer == IntervalTimeState.Canceled || stateTimer == IntervalTimeState.Idle) {
+    LaunchedEffect(key1 = state.currentState) {
+        if (state.currentState == IntervalTimeState.Canceled || state.currentState == IntervalTimeState.Idle) {
             navHostController.popBackStack()
         }
     }
@@ -71,15 +68,15 @@ fun TimerPresentation(
         modifier = Modifier.fillMaxSize()
     ) {
         TimerGraphPresentation(
-            indicatorValue = duration.toInt(DurationUnit.SECONDS),
-            maxIndicatorValue = when (roundState) {
+            indicatorValue = state.duration.toInt(DurationUnit.SECONDS),
+            maxIndicatorValue = when (state.status) {
                 TimerStateEnum.Preparing -> globalTimer.startTime
                 TimerStateEnum.Round -> globalTimer.roundTime
                 TimerStateEnum.Break -> globalTimer.delay
             },
-            smallText = "${round}/${globalTimer.rounds}",
+            smallText = "${state.round}/${globalTimer.rounds}",
             canvasSize = 400.dp,
-            foregroundIndicatorColor = when (roundState) {
+            foregroundIndicatorColor = when (state.status) {
                 TimerStateEnum.Preparing -> Purple
                 TimerStateEnum.Round -> Green
                 TimerStateEnum.Break -> Red
@@ -88,7 +85,7 @@ fun TimerPresentation(
         )
 
         AnimatedContent(
-            targetState = roundState
+            targetState = state.status
         ) {
             when(it) {
                 TimerStateEnum.Preparing -> {
@@ -118,7 +115,7 @@ fun TimerPresentation(
         Spacer(modifier = Modifier.height(40.dp))
 
         AnimatedContent(
-            targetState = stateTimer == IntervalTimeState.Stopped,
+            targetState = state.currentState == IntervalTimeState.Stopped,
             contentAlignment = Alignment.Center,
             modifier = Modifier
                 .padding(16.dp)

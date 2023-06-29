@@ -63,7 +63,7 @@ fun Home(
     val timerState = rememberUseCaseState()
     val roundState = rememberUseCaseState()
     var option: ChooseOptionEnum? = null
-    val currentState = service.currentState.value
+    val currentState = service.state.value.currentState
 
     LaunchedEffect(key1 = currentState) {
         Log.d("Check current state", "${currentState != IntervalTimeState.Idle && currentState != IntervalTimeState.Canceled}")
