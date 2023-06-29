@@ -1,5 +1,6 @@
 package com.example.intervaltimer.future_intervalTimer.present.history.compose
 
+import androidx.compose.animation.ExperimentalAnimationApi
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
@@ -15,7 +16,12 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
 import com.example.intervaltimer.future_intervalTimer.present.history.HistoryViewModel
 import com.example.intervaltimer.R
+import com.example.intervaltimer.core.constants.Constants
+import com.example.intervaltimer.core.global.globalTimer
+import com.example.intervaltimer.future_intervalTimer.domain.service.ServiceHelper
+import com.example.intervaltimer.future_intervalTimer.present.util.compose.ItemPresentation
 
+@OptIn(ExperimentalAnimationApi::class)
 @Composable
 fun HistoryPresent(
     navHostController: NavHostController,
@@ -48,10 +54,17 @@ fun HistoryPresent(
                 verticalArrangement = Arrangement.spacedBy(8.dp)
             ) {
                 items(intervalTimes) { intervatTimer ->
-                    HistoryItem(
-                        navHostController = navHostController,
+                    ItemPresentation(
                         timer = intervatTimer.toTimer(),
-                        context = context
+                        isDelete = false,
+                        onClickStart = {
+                            globalTimer = intervatTimer.toTimer()
+                            ServiceHelper.triggerForegroundService(
+                                context = context,
+                                action = Constants.ACTION_SERVICE_START
+                            )
+                            navHostController.popBackStack()
+                        }
                     )
                 }
             }

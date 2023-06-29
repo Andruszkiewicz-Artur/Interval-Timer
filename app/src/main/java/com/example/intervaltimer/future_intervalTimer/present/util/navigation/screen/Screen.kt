@@ -1,4 +1,4 @@
-package com.example.intervaltimer.future_intervalTimer.present.util.screen
+package com.example.intervaltimer.future_intervalTimer.present.util.navigation.screen
 
 import com.example.intervaltimer.core.constants.Constants
 import com.example.intervaltimer.future_intervalTimer.domain.model.TimerModel

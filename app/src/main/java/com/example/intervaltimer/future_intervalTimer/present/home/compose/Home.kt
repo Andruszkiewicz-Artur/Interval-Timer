@@ -29,7 +29,7 @@ import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
 import com.example.intervaltimer.R
-import com.example.intervaltimer.future_intervalTimer.present.util.screen.Screen
+import com.example.intervaltimer.future_intervalTimer.present.util.navigation.screen.Screen
 import com.example.intervaltimer.core.Event.UiEvent
 import com.example.intervaltimer.core.constants.Constants
 import com.example.intervaltimer.core.global.globalTimer

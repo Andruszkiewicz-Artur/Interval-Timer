@@ -1,12 +1,15 @@
-package com.example.intervaltimer.future_intervalTimer.present.history.compose
+package com.example.intervaltimer.future_intervalTimer.present.util.compose
 
-import android.content.Context
-import androidx.compose.animation.ExperimentalAnimationApi
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
-import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Delete
 import androidx.compose.material.icons.filled.PlayArrow
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
@@ -17,21 +20,15 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.vector.rememberVectorPainter
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
-import androidx.navigation.NavHostController
-import com.example.intervaltimer.core.constants.Constants
-import com.example.intervaltimer.core.global.globalTimer
 import com.example.intervaltimer.future_intervalTimer.domain.model.TimerModel
-import com.example.intervaltimer.future_intervalTimer.domain.service.ServiceHelper
-import com.example.intervaltimer.future_intervalTimer.present.util.navigation.screen.Screen
 
-@OptIn(ExperimentalAnimationApi::class)
 @Composable
-fun HistoryItem(
-    navHostController: NavHostController,
+fun ItemPresentation(
     timer: TimerModel,
-    context: Context
+    isDelete: Boolean,
+    onClickDelete: () -> Unit = { },
+    onClickStart: () -> Unit
 ) {
-
     Row(
         modifier = Modifier
             .fillMaxWidth()
@@ -72,7 +69,20 @@ fun HistoryItem(
                 .fillMaxWidth(0.2f),
             color = MaterialTheme.colorScheme.primary
         )
-        
+
+        if (isDelete) {
+            Icon(
+                painter = rememberVectorPainter(image = Icons.Filled.Delete),
+                contentDescription = null,
+                tint = MaterialTheme.colorScheme.primary,
+                modifier = Modifier
+                    .size(40.dp)
+                    .clickable {
+                        onClickDelete()
+                    }
+            )
+        }
+
         Icon(
             painter = rememberVectorPainter(image = Icons.Filled.PlayArrow),
             contentDescription = null,
@@ -80,14 +90,8 @@ fun HistoryItem(
             modifier = Modifier
                 .size(40.dp)
                 .clickable {
-                    globalTimer = timer
-                    ServiceHelper.triggerForegroundService(
-                        context = context,
-                        action = Constants.ACTION_SERVICE_START
-                    )
-                    navHostController.popBackStack()
+                    onClickStart()
                 }
         )
     }
-
 }

@@ -16,7 +16,7 @@ import com.example.intervaltimer.future_intervalTimer.present.Home
 import com.example.intervaltimer.future_intervalTimer.present.TimerPresentation
 import com.example.intervaltimer.future_intervalTimer.present.history.compose.HistoryPresent
 import com.example.intervaltimer.future_intervalTimer.present.ownIntervalTimes.compose.OwnIntervalTimePresent
-import com.example.intervaltimer.future_intervalTimer.present.util.screen.Screen
+import com.example.intervaltimer.future_intervalTimer.present.util.navigation.screen.Screen
 
 @OptIn(ExperimentalAnimationApi::class)
 @Composable

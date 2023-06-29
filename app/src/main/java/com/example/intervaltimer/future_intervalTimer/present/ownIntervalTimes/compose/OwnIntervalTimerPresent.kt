@@ -1,6 +1,7 @@
 package com.example.intervaltimer.future_intervalTimer.present.ownIntervalTimes.compose
 
 import android.widget.Toast
+import androidx.compose.animation.ExperimentalAnimationApi
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
@@ -20,7 +21,13 @@ import com.example.intervaltimer.core.Event.UiEvent
 import com.example.intervaltimer.future_intervalTimer.present.ownIntervalTimes.ownIntervalTimesViewModel
 import kotlinx.coroutines.flow.collectLatest
 import com.example.intervaltimer.R
+import com.example.intervaltimer.core.constants.Constants
+import com.example.intervaltimer.core.global.globalTimer
+import com.example.intervaltimer.future_intervalTimer.domain.mappers.toTimerModel
+import com.example.intervaltimer.future_intervalTimer.domain.service.ServiceHelper
+import com.example.intervaltimer.future_intervalTimer.present.util.compose.ItemPresentation
 
+@OptIn(ExperimentalAnimationApi::class)
 @Composable
 fun OwnIntervalTimePresent(
     navHostController: NavHostController,
@@ -65,11 +72,20 @@ fun OwnIntervalTimePresent(
                 verticalArrangement = Arrangement.spacedBy(8.dp)
             ) {
                 items(ownIntervalTimes) { ownIntervalTime ->
-                    OwnIntervalTimesItem(
-                        navHostController = navHostController,
-                        ownIntervalTime = ownIntervalTime,
-                        viewModel = viewModel,
-                        context = context
+                    ItemPresentation(
+                        timer = ownIntervalTime.toTimer(),
+                        isDelete = true,
+                        onClickDelete = {
+                            viewModel.onEvent(OwnIntervalTimeEvent.DeleteOwnIntervalTime(ownIntervalTime))
+                        },
+                        onClickStart = {
+                            globalTimer = ownIntervalTime.toTimerModel()
+                            ServiceHelper.triggerForegroundService(
+                                context = context,
+                                action = Constants.ACTION_SERVICE_START
+                            )
+                            navHostController.popBackStack()
+                        }
                     )
                 }
             }
