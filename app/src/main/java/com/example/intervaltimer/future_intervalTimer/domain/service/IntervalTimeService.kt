@@ -121,6 +121,7 @@ class IntervalTimeService : Service() {
             _state.value = state.value.copy(
                 duration = _state.value.duration.minus(1.seconds)
             )
+            updateNotification()
             onTick()
             if (_state.value.duration == ZERO) {
                 when (_state.value.status) {
@@ -198,8 +199,7 @@ class IntervalTimeService : Service() {
         notificationManager.createNotificationChannel(channel)
     }
 
-    @SuppressLint("AutoboxingStateValueProperty")
-    private fun updateNotification(minutes: String, seconds: String) {
+    private fun updateNotification() {
         notificationManager.notify(
             NOTIFICATION_ID,
             notificationBuilder.setContentText(
