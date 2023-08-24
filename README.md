@@ -5,4 +5,5 @@ It is an application for athletes in which the user can determine what his train
 - Room Database
 - Dagger hilt
 - Clean Architecture
+- Use Cases
 - Coroutines
