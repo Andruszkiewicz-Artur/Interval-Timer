@@ -7,3 +7,5 @@ It is an application for athletes in which the user can determine what his train
 - Clean Architecture
 - Use Cases
 - Coroutines
+- Material3
+- Jetpack Compose 
