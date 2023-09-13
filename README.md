@@ -9,3 +9,5 @@ It is an application for athletes in which the user can determine what his train
 - Coroutines
 - Material3
 - Jetpack Compose 
+
+<p><b>App presentation: </b> <a href = "https://youtu.be/n88d5V81B0M">link to video on youtube</a></p>
