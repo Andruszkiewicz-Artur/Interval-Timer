@@ -15,5 +15,5 @@ It is an application for athletes in which the user can determine what his train
   <a href = "https://youtu.be/n88d5V81B0M">Link to video</a>
 </p>
 <p align = "Center">
-  <img src="https://i.postimg.cc/hv5mnZG9/Presentation-Mobile-App-2.jpg" href="">
+  <img src="https://i.postimg.cc/8CNmt3f5/Presentation-Mobile-App-4.jpg" href="">
 </p>
