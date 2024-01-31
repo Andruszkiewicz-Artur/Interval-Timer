@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="app_name">Minuteur d`Intervalles</string>
+    <string name="Menu">Menu</string>
     <string name="Apply">Appliquer</string>
     <string name="YouAddNewIntervalTime">Vous avez ajouté un nouveau temps d`intervalle !</string>
     <string name="ProblemWithAddingNewTimer">Problème lors de l`ajout du nouveau minuteur !</string>

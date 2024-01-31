@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="app_name">Intervall-Timer</string>
+    <string name="Menu">Speisekarte</string>
     <string name="Apply">Anwenden</string>
     <string name="YouAddNewIntervalTime">Du hast eine neue Intervallzeit hinzugefügt!</string>
     <string name="ProblemWithAddingNewTimer">Problem beim Hinzufügen eines neuen Timers!</string>

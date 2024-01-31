@@ -16,6 +16,7 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.History
+import androidx.compose.material.icons.filled.Menu
 import androidx.compose.material.icons.filled.Timer
 import androidx.compose.material.icons.outlined.Star
 import androidx.compose.material.icons.outlined.StarBorder
@@ -50,6 +51,7 @@ import com.maxkeppeler.sheets.duration.models.DurationConfig
 import com.maxkeppeler.sheets.duration.models.DurationFormat
 import com.maxkeppeler.sheets.duration.models.DurationSelection
 import kotlinx.coroutines.flow.collectLatest
+import kotlinx.coroutines.launch
 
 @OptIn(ExperimentalMaterial3Api::class)
 @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
@@ -66,6 +68,8 @@ fun Home(
     val roundState = rememberUseCaseState()
     var option: ChooseOptionEnum? = null
     val currentState = service.state.value.currentState
+    val menuState = rememberDrawerState(initialValue = DrawerValue.Closed)
+    val scope = rememberCoroutineScope()
 
     LaunchedEffect(key1 = currentState) {
         Log.d("Check current state", "${currentState != IntervalTimeState.Idle && currentState != IntervalTimeState.Canceled}")
@@ -137,128 +141,178 @@ fun Home(
         )
     }
 
-    Scaffold(
-        floatingActionButton = {
-            FloatingActionButton(
-                shape = CircleShape,
-                onClick = {
-                    viewModel.onEvent(HomeEvent.InsertOwnIntervalTime)
-                }
-            ) {
-                AnimatedContent(
-                    targetState = state.timerExist,
-                    transitionSpec = {
-                        fadeIn() with fadeOut()
-                    },
-                    label = ""
-                ) {
-                    if (it == true) {
-                        Icon(
-                            imageVector = Icons.Outlined.Star,
-                            contentDescription = "Like",
-                            tint = MaterialTheme.colorScheme.secondary,
-                            modifier = Modifier
-                                .size(40.dp)
 
-                        )
-                    } else {
-                        Icon(
-                            imageVector = Icons.Outlined.StarBorder,
-                            contentDescription = "Like",
-                            tint = MaterialTheme.colorScheme.secondary,
-                            modifier = Modifier
-                                .size(40.dp)
-
-                        )
-                    }
-                }
-            }
-        }
+    Surface(
+        modifier = Modifier.fillMaxSize(),
+        color = MaterialTheme.colorScheme.background
     ) {
-        LazyColumn(
-            horizontalAlignment = Alignment.CenterHorizontally,
-            modifier = Modifier
-                .fillMaxSize()
-        ) {
-            item {
+        ModalNavigationDrawer(
+            drawerContent = {
+                ModalDrawerSheet {
+                    Text(
+                        text = stringResource(id = R.string.Menu),
+                        style = MaterialTheme.typography.titleLarge,
+                        modifier = Modifier
+                            .padding(16.dp)
+                    )
 
-                Row(
-                    horizontalArrangement = Arrangement.Center,
-                    verticalAlignment = Alignment.CenterVertically,
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(top = 20.dp)
-                ) {
-                    HomeButton(
-                        image = Icons.Filled.Timer,
-                        text = stringResource(id = R.string.OwnTimers)
-                    ) {
-                        navHostController.navigate(Screen.OwnIntervalTimers.route)
-                    }
+                    Divider(modifier = Modifier.padding(horizontal = 16.dp))
 
-                    Spacer(modifier = Modifier.fillMaxWidth(0.6f))
-
-                    HomeButton(
-                        image = Icons.Filled.History,
-                        text = stringResource(id = R.string.History)
-                    ) {
-                        navHostController.navigate(Screen.History.route)
-                    }
-                }
-
-                Text(
-                    text = stringResource(id = R.string.IntervalTimer),
-                    style = MaterialTheme.typography.displaySmall,
-                    textAlign = TextAlign.Center,
-                    modifier = Modifier
-                        .padding(16.dp)
-                        .fillMaxWidth()
-                )
-
-                CurrentChoosePresentation(
-                    time = state.timer.startTime,
-                    text = stringResource(id = R.string.TimeToPrepare)
-                ) {
-                    option = ChooseOptionEnum.PrepareTime
-                    timerState.show()
-                }
-                CurrentChoosePresentation(
-                    time = state.timer.roundTime,
-                    text = stringResource(id = R.string.RoundTime)
-                ) {
-                    option = ChooseOptionEnum.RoundTime
-                    timerState.show()
-                }
-                CurrentChoosePresentation(
-                    time = state.timer.delay,
-                    text = stringResource(id = R.string.BreakTime)
-                ) {
-                    option = ChooseOptionEnum.BreakTime
-                    timerState.show()
-                }
-                CurrentChoosePresentation(
-                    time = state.timer.rounds,
-                    text = stringResource(id = R.string.Rounds),
-                    isTimer = false
-                ) {
-                    roundState.show()
-                }
-                Spacer(modifier = Modifier.height(40.dp))
-                Icon(
-                    painter = painterResource(id = R.drawable.sound_sampler),
-                    contentDescription = null,
-                    tint = MaterialTheme.colorScheme.primary,
-                    modifier = Modifier
-                        .padding(bottom = 40.dp)
-                        .size(150.dp)
-                        .clickable {
-                            globalTimer = state.timer
-                            ServiceHelper.triggerForegroundService(
-                                context = context,
-                                action = Constants.ACTION_SERVICE_START
+                    NavigationDrawerItem(
+                        label = {
+                            Text(text = stringResource(id = R.string.OwnTimers))
+                        },
+                        onClick = {
+                            navHostController.navigate(Screen.OwnIntervalTimers.route)
+                            scope.launch {
+                                menuState.close()
+                            }
+                        },
+                        icon = {
+                            Icon(
+                                imageVector = Icons.Filled.Timer,
+                                contentDescription = null
                             )
+                        },
+                        selected = false,
+                        modifier = Modifier
+                            .padding(NavigationDrawerItemDefaults.ItemPadding)
+                    )
+
+                    NavigationDrawerItem(
+                        label = {
+                            Text(text = stringResource(id = R.string.History))
+                        },
+                        onClick = {
+                            navHostController.navigate(Screen.History.route)
+                            scope.launch {
+                                menuState.close()
+                            }
+                        },
+                        icon = {
+                            Icon(
+                                imageVector = Icons.Filled.History,
+                                contentDescription = null
+                            )
+                        },
+                        selected = false,
+                        modifier = Modifier
+                            .padding(NavigationDrawerItemDefaults.ItemPadding)
+                    )
+                }
+            },
+            drawerState = menuState
+        ) {
+            Scaffold(
+                floatingActionButton = {
+                    FloatingActionButton(
+                        shape = CircleShape,
+                        onClick = {
+                            viewModel.onEvent(HomeEvent.InsertOwnIntervalTime)
                         }
-                )
+                    ) {
+                        AnimatedContent(
+                            targetState = state.timerExist,
+                            transitionSpec = {
+                                fadeIn() with fadeOut()
+                            },
+                            label = ""
+                        ) {
+                            if (it == true) {
+                                Icon(
+                                    imageVector = Icons.Outlined.Star,
+                                    contentDescription = "Like",
+                                    tint = MaterialTheme.colorScheme.secondary,
+                                    modifier = Modifier
+                                        .size(40.dp)
+
+                                )
+                            } else {
+                                Icon(
+                                    imageVector = Icons.Outlined.StarBorder,
+                                    contentDescription = "Like",
+                                    tint = MaterialTheme.colorScheme.secondary,
+                                    modifier = Modifier
+                                        .size(40.dp)
+
+                                )
+                            }
+                        }
+                    }
+                },
+                topBar = {
+                    CenterAlignedTopAppBar(
+                        title = {
+                            Text(text = stringResource(id = R.string.IntervalTimer))
+                        },
+                        navigationIcon = {
+                            IconButton(onClick = {
+                                scope.launch {
+                                    menuState.open()
+                                }
+                            }) {
+                                Icon(
+                                    imageVector = Icons.Filled.Menu,
+                                    contentDescription = null
+                                )
+                            }
+                        }
+                    )
+                }
+            ) { padding ->
+                LazyColumn(
+                    horizontalAlignment = Alignment.CenterHorizontally,
+                    modifier = Modifier
+                        .fillMaxSize()
+                        .padding(padding)
+                ) {
+                    item {
+                        CurrentChoosePresentation(
+                            time = state.timer.startTime,
+                            text = stringResource(id = R.string.TimeToPrepare)
+                        ) {
+                            option = ChooseOptionEnum.PrepareTime
+                            timerState.show()
+                        }
+                        CurrentChoosePresentation(
+                            time = state.timer.roundTime,
+                            text = stringResource(id = R.string.RoundTime)
+                        ) {
+                            option = ChooseOptionEnum.RoundTime
+                            timerState.show()
+                        }
+                        CurrentChoosePresentation(
+                            time = state.timer.delay,
+                            text = stringResource(id = R.string.BreakTime)
+                        ) {
+                            option = ChooseOptionEnum.BreakTime
+                            timerState.show()
+                        }
+                        CurrentChoosePresentation(
+                            time = state.timer.rounds,
+                            text = stringResource(id = R.string.Rounds),
+                            isTimer = false
+                        ) {
+                            roundState.show()
+                        }
+                        Spacer(modifier = Modifier.height(40.dp))
+                        Icon(
+                            painter = painterResource(id = R.drawable.sound_sampler),
+                            contentDescription = null,
+                            tint = MaterialTheme.colorScheme.primary,
+                            modifier = Modifier
+                                .padding(bottom = 40.dp)
+                                .size(150.dp)
+                                .clickable {
+                                    globalTimer = state.timer
+                                    ServiceHelper.triggerForegroundService(
+                                        context = context,
+                                        action = Constants.ACTION_SERVICE_START
+                                    )
+                                }
+                        )
+                    }
+                }
             }
         }
     }
