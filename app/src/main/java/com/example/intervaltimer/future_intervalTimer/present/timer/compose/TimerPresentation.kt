@@ -5,11 +5,11 @@ import android.annotation.SuppressLint
 import androidx.compose.animation.AnimatedContent
 import androidx.compose.animation.ExperimentalAnimationApi
 import androidx.compose.foundation.layout.*
-import androidx.compose.material.MaterialTheme
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Block
 import androidx.compose.material.icons.filled.Pause
 import androidx.compose.material.icons.filled.PlayArrow
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
@@ -85,27 +85,28 @@ fun TimerPresentation(
         )
 
         AnimatedContent(
-            targetState = state.status
+            targetState = state.status,
+            label = ""
         ) {
             when(it) {
                 TimerStateEnum.Preparing -> {
                     Text(
                         text = stringResource(id = R.string.Preparing),
-                        fontSize = MaterialTheme.typography.h2.fontSize,
+                        style = MaterialTheme.typography.headlineLarge,
                         fontWeight = FontWeight.Bold
                     )
                 }
                 TimerStateEnum.Round -> {
                     Text(
                         text = stringResource(id = R.string.Round),
-                        fontSize = MaterialTheme.typography.h2.fontSize,
+                        style = MaterialTheme.typography.headlineLarge,
                         fontWeight = FontWeight.Bold
                     )
                 }
                 TimerStateEnum.Break -> {
                     Text(
                         text = stringResource(id = R.string.Break),
-                        fontSize = MaterialTheme.typography.h2.fontSize,
+                        style = MaterialTheme.typography.headlineLarge,
                         fontWeight = FontWeight.Bold
                     )
                 }
@@ -119,7 +120,8 @@ fun TimerPresentation(
             contentAlignment = Alignment.Center,
             modifier = Modifier
                 .padding(16.dp)
-                .height(100.dp)
+                .height(100.dp),
+            label = ""
         ) {
             Row(
                 verticalAlignment = Alignment.CenterVertically

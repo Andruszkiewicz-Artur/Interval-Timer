@@ -12,6 +12,7 @@ import androidx.compose.animation.fadeOut
 import androidx.compose.animation.with
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.History
@@ -25,6 +26,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
@@ -147,7 +149,8 @@ fun Home(
                     targetState = state.timerExist,
                     transitionSpec = {
                         fadeIn() with fadeOut()
-                    }
+                    },
+                    label = ""
                 ) {
                     if (it == true) {
                         Icon(
@@ -172,86 +175,91 @@ fun Home(
             }
         }
     ) {
-        Column(
+        LazyColumn(
             horizontalAlignment = Alignment.CenterHorizontally,
             modifier = Modifier
                 .fillMaxSize()
         ) {
-            Row(
-                horizontalArrangement = Arrangement.Center,
-                verticalAlignment = Alignment.CenterVertically,
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(top = 20.dp)
-            ) {
-                HomeButton(
-                    image = Icons.Filled.Timer,
-                    text = stringResource(id = R.string.OwnTimers)
+            item {
+
+                Row(
+                    horizontalArrangement = Arrangement.Center,
+                    verticalAlignment = Alignment.CenterVertically,
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(top = 20.dp)
                 ) {
-                    navHostController.navigate(Screen.OwnIntervalTimers.route)
-                }
-
-                Spacer(modifier = Modifier.fillMaxWidth(0.6f))
-
-                HomeButton(
-                    image = Icons.Filled.History,
-                    text = stringResource(id = R.string.History)
-                ) {
-                    navHostController.navigate(Screen.History.route)
-                }
-            }
-
-            Text(
-                text = stringResource(id = R.string.IntervalTimer),
-                fontSize = MaterialTheme.typography.displayLarge.fontSize,
-                modifier = Modifier
-                    .padding(16.dp)
-            )
-
-            CurrentChoosePresentation(
-                time = state.timer.startTime,
-                text = stringResource(id = R.string.TimeToPrepare)
-            ) {
-                option = ChooseOptionEnum.PrepareTime
-                timerState.show()
-            }
-            CurrentChoosePresentation(
-                time = state.timer.roundTime,
-                text = stringResource(id = R.string.RoundTime)
-            ) {
-                option = ChooseOptionEnum.RoundTime
-                timerState.show()
-            }
-            CurrentChoosePresentation(
-                time = state.timer.delay,
-                text = stringResource(id = R.string.BreakTime)
-            ) {
-                option = ChooseOptionEnum.BreakTime
-                timerState.show()
-            }
-            CurrentChoosePresentation(
-                time = state.timer.rounds,
-                text = stringResource(id = R.string.Rounds),
-                isTimer = false
-            ) {
-                roundState.show()
-            }
-            Spacer(modifier = Modifier.height(40.dp))
-            Icon(
-                painter = painterResource(id = R.drawable.sound_sampler),
-                contentDescription = null,
-                tint = MaterialTheme.colorScheme.primary,
-                modifier = Modifier
-                    .padding(bottom = 40.dp)
-                    .size(200.dp)
-                    .clickable {
-                        globalTimer = state.timer
-                        ServiceHelper.triggerForegroundService(
-                            context = context,
-                            action = Constants.ACTION_SERVICE_START
-                        )
+                    HomeButton(
+                        image = Icons.Filled.Timer,
+                        text = stringResource(id = R.string.OwnTimers)
+                    ) {
+                        navHostController.navigate(Screen.OwnIntervalTimers.route)
                     }
-            )
+
+                    Spacer(modifier = Modifier.fillMaxWidth(0.6f))
+
+                    HomeButton(
+                        image = Icons.Filled.History,
+                        text = stringResource(id = R.string.History)
+                    ) {
+                        navHostController.navigate(Screen.History.route)
+                    }
+                }
+
+                Text(
+                    text = stringResource(id = R.string.IntervalTimer),
+                    style = MaterialTheme.typography.displaySmall,
+                    textAlign = TextAlign.Center,
+                    modifier = Modifier
+                        .padding(16.dp)
+                        .fillMaxWidth()
+                )
+
+                CurrentChoosePresentation(
+                    time = state.timer.startTime,
+                    text = stringResource(id = R.string.TimeToPrepare)
+                ) {
+                    option = ChooseOptionEnum.PrepareTime
+                    timerState.show()
+                }
+                CurrentChoosePresentation(
+                    time = state.timer.roundTime,
+                    text = stringResource(id = R.string.RoundTime)
+                ) {
+                    option = ChooseOptionEnum.RoundTime
+                    timerState.show()
+                }
+                CurrentChoosePresentation(
+                    time = state.timer.delay,
+                    text = stringResource(id = R.string.BreakTime)
+                ) {
+                    option = ChooseOptionEnum.BreakTime
+                    timerState.show()
+                }
+                CurrentChoosePresentation(
+                    time = state.timer.rounds,
+                    text = stringResource(id = R.string.Rounds),
+                    isTimer = false
+                ) {
+                    roundState.show()
+                }
+                Spacer(modifier = Modifier.height(40.dp))
+                Icon(
+                    painter = painterResource(id = R.drawable.sound_sampler),
+                    contentDescription = null,
+                    tint = MaterialTheme.colorScheme.primary,
+                    modifier = Modifier
+                        .padding(bottom = 40.dp)
+                        .size(150.dp)
+                        .clickable {
+                            globalTimer = state.timer
+                            ServiceHelper.triggerForegroundService(
+                                context = context,
+                                action = Constants.ACTION_SERVICE_START
+                            )
+                        }
+                )
+            }
         }
     }
 }

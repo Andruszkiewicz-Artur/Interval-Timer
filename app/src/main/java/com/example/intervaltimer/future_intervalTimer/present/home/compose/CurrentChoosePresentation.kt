@@ -4,6 +4,7 @@ import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.Text
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -28,8 +29,8 @@ fun CurrentChoosePresentation(
     ) {
         Text(
             text = text,
-            fontSize = 24.sp,
-            fontWeight = FontWeight.Light
+            style = MaterialTheme.typography.titleLarge,
+            fontWeight = FontWeight.Thin
         )
         Text(
             text = if (isTimer) {
@@ -37,8 +38,7 @@ fun CurrentChoosePresentation(
             } else {
                 "$time"
             },
-            fontSize = 24.sp,
-            fontWeight = FontWeight.Medium
+            style = MaterialTheme.typography.bodyLarge
         )
     }
 }

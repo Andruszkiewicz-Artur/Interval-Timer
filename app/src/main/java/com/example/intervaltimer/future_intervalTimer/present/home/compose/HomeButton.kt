@@ -38,14 +38,12 @@ fun HomeButton(
             contentDescription = null,
             tint = imageColor,
             modifier = Modifier
-                .size(50.dp)
+                .size(35.dp)
         )
         Text(
             text = text,
             color = textColor,
-            fontSize = 16.sp,
-            textAlign = TextAlign.Center,
-            fontWeight = FontWeight.Light
+            style = MaterialTheme.typography.titleSmall
         )
     }
 }
