@@ -67,6 +67,9 @@ class MainActivity : ComponentActivity() {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
             requestPermissions(Manifest.permission.POST_NOTIFICATIONS)
         }
+        if (Build.VERSION.SDK_INT > Build.VERSION_CODES.TIRAMISU) {
+            requestPermissions(Manifest.permission.FOREGROUND_SERVICE_MEDIA_PLAYBACK)
+        }
     }
 
     private fun requestPermissions(vararg permissions: String) {
