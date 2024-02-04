@@ -10,20 +10,26 @@ import androidx.compose.animation.ExperimentalAnimationApi
 import androidx.compose.animation.fadeIn
 import androidx.compose.animation.fadeOut
 import androidx.compose.animation.with
+import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Bookmark
+import androidx.compose.material.icons.filled.BookmarkBorder
 import androidx.compose.material.icons.filled.History
 import androidx.compose.material.icons.filled.Menu
 import androidx.compose.material.icons.filled.Timer
+import androidx.compose.material.icons.outlined.Bookmark
+import androidx.compose.material.icons.outlined.BookmarkBorder
 import androidx.compose.material.icons.outlined.Star
 import androidx.compose.material.icons.outlined.StarBorder
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
@@ -143,8 +149,7 @@ fun Home(
 
 
     Surface(
-        modifier = Modifier.fillMaxSize(),
-        color = MaterialTheme.colorScheme.background
+        modifier = Modifier.fillMaxSize()
     ) {
         ModalNavigationDrawer(
             drawerContent = {
@@ -205,41 +210,47 @@ fun Home(
         ) {
             Scaffold(
                 floatingActionButton = {
-                    FloatingActionButton(
-                        shape = CircleShape,
+                    Button(
                         onClick = {
-                            viewModel.onEvent(HomeEvent.InsertOwnIntervalTime)
-                        }
+                            globalTimer = state.timer
+                            ServiceHelper.triggerForegroundService(
+                                context = context,
+                                action = Constants.ACTION_SERVICE_START
+                            )
+                        },
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(16.dp)
                     ) {
-                        AnimatedContent(
-                            targetState = state.timerExist,
-                            transitionSpec = {
-                                fadeIn() with fadeOut()
-                            },
-                            label = ""
+                        Row(
+                            verticalAlignment = Alignment.CenterVertically,
+                            horizontalArrangement = Arrangement.SpaceBetween,
+                            modifier = Modifier
+                                .padding(8.dp)
+                                .fillMaxWidth()
                         ) {
-                            if (it == true) {
-                                Icon(
-                                    imageVector = Icons.Outlined.Star,
-                                    contentDescription = "Like",
-                                    tint = MaterialTheme.colorScheme.secondary,
-                                    modifier = Modifier
-                                        .size(40.dp)
+                            Text(
+                                text = stringResource(id = R.string.StartWorkout),
+                                style = MaterialTheme.typography.titleSmall
+                            )
 
+                            Column(
+                                horizontalAlignment = Alignment.CenterHorizontally
+                            ) {
+                                Text(
+                                    text = "8:40",
+                                    style = MaterialTheme.typography.titleSmall
                                 )
-                            } else {
-                                Icon(
-                                    imageVector = Icons.Outlined.StarBorder,
-                                    contentDescription = "Like",
-                                    tint = MaterialTheme.colorScheme.secondary,
-                                    modifier = Modifier
-                                        .size(40.dp)
 
+                                Text(
+                                    text = stringResource(id = R.string.Duration),
+                                    style = MaterialTheme.typography.bodySmall
                                 )
                             }
                         }
                     }
                 },
+                floatingActionButtonPosition = FabPosition.Center,
                 topBar = {
                     CenterAlignedTopAppBar(
                         title = {
@@ -255,6 +266,43 @@ fun Home(
                                     imageVector = Icons.Filled.Menu,
                                     contentDescription = null
                                 )
+                            }
+                        },
+                        actions = {
+                            AnimatedContent(
+                                targetState = state.timerExist,
+                                transitionSpec = {
+                                    fadeIn() with fadeOut()
+                                },
+                                label = ""
+                            ) {
+                                if (it == true) {
+                                    IconButton(onClick = {
+                                        viewModel.onEvent(HomeEvent.InsertOwnIntervalTime)
+                                    }) {
+                                        Icon(
+                                            imageVector = Icons.Outlined.Bookmark,
+                                            contentDescription = "Like",
+                                            tint = MaterialTheme.colorScheme.secondary,
+                                            modifier = Modifier
+                                                .size(40.dp)
+
+                                        )
+                                    }
+                                } else {
+                                    IconButton(onClick = {
+                                        viewModel.onEvent(HomeEvent.InsertOwnIntervalTime)
+                                    }) {
+                                        Icon(
+                                            imageVector = Icons.Outlined.BookmarkBorder,
+                                            contentDescription = "Like",
+                                            tint = MaterialTheme.colorScheme.secondary,
+                                            modifier = Modifier
+                                                .size(40.dp)
+
+                                        )
+                                    }
+                                }
                             }
                         }
                     )
@@ -295,22 +343,6 @@ fun Home(
                         ) {
                             roundState.show()
                         }
-                        Spacer(modifier = Modifier.height(40.dp))
-                        Icon(
-                            painter = painterResource(id = R.drawable.sound_sampler),
-                            contentDescription = null,
-                            tint = MaterialTheme.colorScheme.primary,
-                            modifier = Modifier
-                                .padding(bottom = 40.dp)
-                                .size(150.dp)
-                                .clickable {
-                                    globalTimer = state.timer
-                                    ServiceHelper.triggerForegroundService(
-                                        context = context,
-                                        action = Constants.ACTION_SERVICE_START
-                                    )
-                                }
-                        )
                     }
                 }
             }

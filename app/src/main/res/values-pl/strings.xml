@@ -2,6 +2,8 @@
 <resources>
     <string name="app_name">Timer Interwałowy</string>
     <string name="Menu">Menu</string>
+    <string name="StartWorkout">Rozpocznij trening</string>
+    <string name="Duration">Czas trwania</string>
     <string name="Apply">Zastosuj</string>
     <string name="YouAddNewIntervalTime">Dodano nowy czas interwału!</string>
     <string name="ProblemWithAddingNewTimer">Problem z dodaniem nowego timera!</string>
