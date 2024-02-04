@@ -4,6 +4,7 @@ import com.example.intervaltimer.future_intervalTimer.domain.model.OwnIntervalTi
 import com.example.intervaltimer.future_intervalTimer.domain.model.TimerModel
 
 data class HomeState(
+    val overallTime: Int = 1155,
     var ownIntervalTimes: MutableList<OwnIntervalTime> = mutableListOf(),
     val timer: TimerModel = TimerModel(
         startTime = 15,

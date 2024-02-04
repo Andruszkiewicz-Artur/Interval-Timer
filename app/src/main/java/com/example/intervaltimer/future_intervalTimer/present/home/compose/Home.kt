@@ -41,6 +41,7 @@ import com.example.intervaltimer.R
 import com.example.intervaltimer.future_intervalTimer.present.util.navigation.screen.Screen
 import com.example.intervaltimer.core.Event.UiEvent
 import com.example.intervaltimer.core.constants.Constants
+import com.example.intervaltimer.core.extension.toTime
 import com.example.intervaltimer.core.global.globalTimer
 import com.example.intervaltimer.future_intervalTimer.domain.model.ChooseOptionEnum
 import com.example.intervaltimer.future_intervalTimer.domain.model.IntervalTimeState
@@ -238,7 +239,7 @@ fun Home(
                                 horizontalAlignment = Alignment.CenterHorizontally
                             ) {
                                 Text(
-                                    text = "8:40",
+                                    text = state.overallTime.toTime(),
                                     style = MaterialTheme.typography.titleSmall
                                 )
 

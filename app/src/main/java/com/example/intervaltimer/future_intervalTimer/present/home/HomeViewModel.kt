@@ -20,6 +20,7 @@ import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asSharedFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.flow.update
@@ -64,6 +65,7 @@ class HomeViewModel @Inject constructor(
                         delay = event.time.toInt()
                     )
                 )
+                overallTimer()
             }
             is HomeEvent.setPrepareTime -> {
                 _state.value = state.value.copy(
@@ -71,6 +73,7 @@ class HomeViewModel @Inject constructor(
                         startTime = event.time.toInt()
                     )
                 )
+                overallTimer()
             }
             is HomeEvent.setRoundTime -> {
                 _state.value = state.value.copy(
@@ -78,6 +81,7 @@ class HomeViewModel @Inject constructor(
                         roundTime = event.time.toInt()
                     )
                 )
+                overallTimer()
             }
             is HomeEvent.setRounds -> {
                 _state.value = state.value.copy(
@@ -85,6 +89,7 @@ class HomeViewModel @Inject constructor(
                        rounds = event.time.toInt()
                    )
                 )
+                overallTimer()
             }
         }
         isExistTimer()
@@ -92,14 +97,19 @@ class HomeViewModel @Inject constructor(
 
     private fun getAllOwnIntervalTimes() {
         viewModelScope.launch {
-            ownIntervalTimeUseCases.getAllOwnIntervalTimesUseCase.invoke().onEach { ownIntervalTimes ->
-                _state.value = _state.value.copy(
-                    ownIntervalTimes = ownIntervalTimes.toMutableList()
-                )
-            }.launchIn(viewModelScope)
+//            ownIntervalTimeUseCases.getAllOwnIntervalTimesUseCase.invoke().onEach { ownIntervalTimes ->
+//                _state.value = _state.value.copy(
+//                    ownIntervalTimes = ownIntervalTimes.toMutableList()
+//                )
+//            }.launchIn(viewModelScope)
 
-            delay(500)
-            isExistTimer()
+            ownIntervalTimeUseCases.getAllOwnIntervalTimesUseCase.invoke().collectLatest { ownTimers ->
+                _state.value = _state.value.copy(
+                    ownIntervalTimes = ownTimers.toMutableList()
+                )
+
+                isExistTimer()
+            }
         }
     }
 
@@ -115,5 +125,18 @@ class HomeViewModel @Inject constructor(
                 timerExist = isExist
             )
         }
+    }
+
+    private fun overallTimer() {
+        //Add start round
+        var overallTime = _state.value.timer.startTime
+        //Add resul off all rounds
+        overallTime += _state.value.timer.roundTime * _state.value.timer.rounds
+        //Add result of all delays
+        overallTime += _state.value.timer.delay * (_state.value.timer.rounds - 1)
+
+        _state.value = state.value.copy(
+            overallTime = overallTime
+        )
     }
 }
