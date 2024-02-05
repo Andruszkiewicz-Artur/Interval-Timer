@@ -4,6 +4,9 @@
     <string name="Menu">Menu</string>
     <string name="StartWorkout">Rozpocznij trening</string>
     <string name="Duration">Czas trwania</string>
+    <string name="Start">Rozpocznij</string>
+    <string name="Set">Seria</string>
+    <string name="Sets">Serie</string>
     <string name="Apply">Zastosuj</string>
     <string name="YouAddNewIntervalTime">Dodano nowy czas interwału!</string>
     <string name="ProblemWithAddingNewTimer">Problem z dodaniem nowego timera!</string>

@@ -51,6 +51,7 @@ import com.example.intervaltimer.future_intervalTimer.present.home.HomeEvent
 import com.example.intervaltimer.future_intervalTimer.present.home.HomeViewModel
 import com.example.intervaltimer.future_intervalTimer.present.home.compose.CurrentChoosePresentation
 import com.example.intervaltimer.future_intervalTimer.present.home.compose.HomeButton
+import com.example.intervaltimer.future_intervalTimer.present.util.compose.OwnNavigationDrawer
 import com.maxkeppeker.sheets.core.models.base.SelectionButton
 import com.maxkeppeker.sheets.core.models.base.rememberUseCaseState
 import com.maxkeppeler.sheets.duration.DurationDialog
@@ -60,13 +61,14 @@ import com.maxkeppeler.sheets.duration.models.DurationSelection
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 
-@OptIn(ExperimentalMaterial3Api::class)
+@OptIn(ExperimentalMaterial3Api::class, ExperimentalAnimationApi::class)
 @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
 @Composable
 fun Home(
     navHostController: NavHostController,
     viewModel: HomeViewModel = hiltViewModel(),
-    service: IntervalTimeService
+    service: IntervalTimeService,
+    drawerState: DrawerState
 ) {
     val context = LocalContext.current
     val state = viewModel.state.value
@@ -75,11 +77,13 @@ fun Home(
     val roundState = rememberUseCaseState()
     var option: ChooseOptionEnum? = null
     val currentState = service.state.value.currentState
-    val menuState = rememberDrawerState(initialValue = DrawerValue.Closed)
     val scope = rememberCoroutineScope()
 
     LaunchedEffect(key1 = currentState) {
-        Log.d("Check current state", "${currentState != IntervalTimeState.Idle && currentState != IntervalTimeState.Canceled}")
+        Log.d(
+            "Check current state",
+            "${currentState != IntervalTimeState.Idle && currentState != IntervalTimeState.Canceled}"
+        )
         if (currentState != IntervalTimeState.Idle && currentState != IntervalTimeState.Canceled) {
             navHostController.navigate(Screen.Timer.route)
         }
@@ -93,17 +97,20 @@ fun Home(
                 text = stringResource(id = R.string.Apply)
             ),
             onPositiveClick = {
-                when(option) {
+                when (option) {
                     ChooseOptionEnum.PrepareTime -> {
                         viewModel.onEvent(HomeEvent.setPrepareTime(it))
                     }
+
                     ChooseOptionEnum.RoundTime -> {
                         viewModel.onEvent(HomeEvent.setRoundTime(it))
                     }
+
                     ChooseOptionEnum.BreakTime -> {
                         viewModel.onEvent(HomeEvent.setBreakTime(it))
                     }
-                    null -> { }
+
+                    null -> {}
                 }
                 option = null
             }
@@ -131,7 +138,7 @@ fun Home(
 
     LaunchedEffect(key1 = true) {
         viewModel.eventFlow.collectLatest { event ->
-            when(event) {
+            when (event) {
                 is UiEvent.ShowToast -> {
                     Toast.makeText(
                         context,
@@ -149,66 +156,10 @@ fun Home(
     }
 
 
-    Surface(
-        modifier = Modifier.fillMaxSize()
-    ) {
-        ModalNavigationDrawer(
-            drawerContent = {
-                ModalDrawerSheet {
-                    Text(
-                        text = stringResource(id = R.string.Menu),
-                        style = MaterialTheme.typography.titleLarge,
-                        modifier = Modifier
-                            .padding(16.dp)
-                    )
-
-                    Divider(modifier = Modifier.padding(horizontal = 16.dp))
-
-                    NavigationDrawerItem(
-                        label = {
-                            Text(text = stringResource(id = R.string.OwnTimers))
-                        },
-                        onClick = {
-                            navHostController.navigate(Screen.OwnIntervalTimers.route)
-                            scope.launch {
-                                menuState.close()
-                            }
-                        },
-                        icon = {
-                            Icon(
-                                imageVector = Icons.Filled.Timer,
-                                contentDescription = null
-                            )
-                        },
-                        selected = false,
-                        modifier = Modifier
-                            .padding(NavigationDrawerItemDefaults.ItemPadding)
-                    )
-
-                    NavigationDrawerItem(
-                        label = {
-                            Text(text = stringResource(id = R.string.History))
-                        },
-                        onClick = {
-                            navHostController.navigate(Screen.History.route)
-                            scope.launch {
-                                menuState.close()
-                            }
-                        },
-                        icon = {
-                            Icon(
-                                imageVector = Icons.Filled.History,
-                                contentDescription = null
-                            )
-                        },
-                        selected = false,
-                        modifier = Modifier
-                            .padding(NavigationDrawerItemDefaults.ItemPadding)
-                    )
-                }
-            },
-            drawerState = menuState
-        ) {
+    OwnNavigationDrawer(
+        navHostController = navHostController,
+        menuState = drawerState,
+        content = {
             Scaffold(
                 floatingActionButton = {
                     Button(
@@ -260,7 +211,7 @@ fun Home(
                         navigationIcon = {
                             IconButton(onClick = {
                                 scope.launch {
-                                    menuState.open()
+                                    drawerState.open()
                                 }
                             }) {
                                 Icon(
@@ -348,5 +299,5 @@ fun Home(
                 }
             }
         }
-    }
+    )
 }

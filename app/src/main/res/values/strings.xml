@@ -3,6 +3,9 @@
     <string name="Menu">Menu</string>
     <string name="StartWorkout">Start workout</string>
     <string name="Duration">Duration</string>
+    <string name="Start">Start</string>
+    <string name="Set">Set</string>
+    <string name="Sets">Sets</string>
     <string name="Apply">Apply</string>
     <string name="YouAddNewIntervalTime">You Add new Interval Time!</string>
     <string name="ProblemWithAddingNewTimer">Problem with adding new timer!</string>

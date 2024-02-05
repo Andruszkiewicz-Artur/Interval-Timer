@@ -97,12 +97,6 @@ class HomeViewModel @Inject constructor(
 
     private fun getAllOwnIntervalTimes() {
         viewModelScope.launch {
-//            ownIntervalTimeUseCases.getAllOwnIntervalTimesUseCase.invoke().onEach { ownIntervalTimes ->
-//                _state.value = _state.value.copy(
-//                    ownIntervalTimes = ownIntervalTimes.toMutableList()
-//                )
-//            }.launchIn(viewModelScope)
-
             ownIntervalTimeUseCases.getAllOwnIntervalTimesUseCase.invoke().collectLatest { ownTimers ->
                 _state.value = _state.value.copy(
                     ownIntervalTimes = ownTimers.toMutableList()

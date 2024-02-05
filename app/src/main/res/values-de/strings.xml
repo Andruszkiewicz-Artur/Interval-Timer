@@ -4,6 +4,9 @@
     <string name="Menu">Speisekarte</string>
     <string name="StartWorkout">Training starten</string>
     <string name="Duration">Dauer</string>
+    <string name="Start">Starten</string>
+    <string name="Set">Satz</string>
+    <string name="Sets">Sätze</string>
     <string name="Apply">Anwenden</string>
     <string name="YouAddNewIntervalTime">Du hast eine neue Intervallzeit hinzugefügt!</string>
     <string name="ProblemWithAddingNewTimer">Problem beim Hinzufügen eines neuen Timers!</string>

@@ -27,7 +27,6 @@ import dagger.hilt.android.AndroidEntryPoint
 @AndroidEntryPoint
 class MainActivity : ComponentActivity() {
 
-    private lateinit var navController: NavHostController
     private var isBound by mutableStateOf(false)
     private lateinit var intervalTimeService: IntervalTimeService
     private val connection = object : ServiceConnection {
@@ -52,12 +51,10 @@ class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContent {
-            navController = rememberNavController()
 
             IntervalTimerTheme {
                 if (isBound) {
                     NavGraph(
-                        navHostController = navController,
                         service = intervalTimeService
                     )
                 }

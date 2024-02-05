@@ -4,6 +4,9 @@
     <string name="Menu">Menú</string>
     <string name="StartWorkout">Iniciar entrenamiento</string>
     <string name="Duration">Duración</string>
+    <string name="Start">Iniciar</string>
+    <string name="Set">Serie</string>
+    <string name="Sets">Series</string>
     <string name="Apply">Aplicar</string>
     <string name="YouAddNewIntervalTime">¡Has agregado un nuevo tiempo de intervalo!</string>
     <string name="ProblemWithAddingNewTimer">Problema al agregar un nuevo temporizador.</string>
