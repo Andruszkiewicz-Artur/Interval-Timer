@@ -14,3 +14,11 @@ data class HomeState(
     ),
     val timerExist: Boolean? = null
 )
+
+enum class TimerOptionEnum {
+    Prepare, RoundTime, Break, Rounds
+}
+
+enum class ChangeTimerValueEnum {
+    Add, Subtract
+}

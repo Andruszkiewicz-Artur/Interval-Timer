@@ -8,4 +8,5 @@ sealed class HomeEvent {
     data class setRoundTime(val time: Long): HomeEvent()
     data class setBreakTime(val time: Long): HomeEvent()
     data class setRounds(val time: Long): HomeEvent()
+    data class ChangeTimerValue(val timerType: TimerOptionEnum, val timerValue: ChangeTimerValueEnum): HomeEvent()
 }

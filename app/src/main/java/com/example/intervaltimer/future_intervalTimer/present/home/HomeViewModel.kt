@@ -91,6 +91,55 @@ class HomeViewModel @Inject constructor(
                 )
                 overallTimer()
             }
+            is HomeEvent.ChangeTimerValue -> {
+                var timerValue = _state.value.timer
+
+                when (event.timerValue) {
+                    ChangeTimerValueEnum.Add -> {
+                        when(event.timerType) {
+                            TimerOptionEnum.Prepare -> {
+                                timerValue = timerValue.copy(startTime = changeTimerValue(timerValue.startTime, ChangeTimerValueEnum.Add))
+                            }
+                            TimerOptionEnum.RoundTime -> {
+                                timerValue = timerValue.copy(roundTime = changeTimerValue(timerValue.roundTime, ChangeTimerValueEnum.Add))
+                            }
+                            TimerOptionEnum.Break -> {
+                                timerValue = timerValue.copy(delay = changeTimerValue(timerValue.delay, ChangeTimerValueEnum.Add))
+                            }
+                            TimerOptionEnum.Rounds -> {
+                                timerValue = timerValue.copy(rounds = timerValue.rounds + 1)
+                            }
+                        }
+                    }
+                    ChangeTimerValueEnum.Subtract -> {
+                        when(event.timerType) {
+                            TimerOptionEnum.Prepare -> {
+                                if (timerValue.startTime > 0) {
+                                    timerValue = timerValue.copy(startTime = changeTimerValue(timerValue.startTime, ChangeTimerValueEnum.Subtract))
+                                }
+                            }
+                            TimerOptionEnum.RoundTime -> {
+                                if (timerValue.roundTime > 5) {
+                                    timerValue = timerValue.copy(roundTime = changeTimerValue(timerValue.roundTime, ChangeTimerValueEnum.Subtract))
+                                }
+                            }
+                            TimerOptionEnum.Break -> {
+                                if (timerValue.delay > 5) {
+                                    timerValue = timerValue.copy(delay = changeTimerValue(timerValue.delay, ChangeTimerValueEnum.Subtract))
+                                }
+                            }
+                            TimerOptionEnum.Rounds -> {
+                                if (timerValue.rounds > 1) {
+                                    timerValue = timerValue.copy(rounds = timerValue.rounds - 1)
+                                }
+                            }
+                        }
+                    }
+                }
+
+                _state.value = state.value.copy(timer = timerValue)
+                overallTimer()
+            }
         }
         isExistTimer()
     }
@@ -132,5 +181,28 @@ class HomeViewModel @Inject constructor(
         _state.value = state.value.copy(
             overallTime = overallTime
         )
+    }
+
+    private fun changeTimerValue(currentValue: Int, timerValue: ChangeTimerValueEnum): Int {
+        return when (timerValue) {
+            ChangeTimerValueEnum.Add -> {
+                if (currentValue < 60) {
+                    currentValue + 5
+                } else if(currentValue < 300) {
+                    currentValue + 10
+                } else {
+                    currentValue + 30
+                }
+            }
+            ChangeTimerValueEnum.Subtract -> {
+                if (currentValue <= 60) {
+                    currentValue - 5
+                } else if(currentValue <= 300) {
+                    currentValue - 10
+                } else {
+                    currentValue - 30
+                }
+            }
+        }
     }
 }

@@ -47,8 +47,10 @@ import com.example.intervaltimer.future_intervalTimer.domain.model.ChooseOptionE
 import com.example.intervaltimer.future_intervalTimer.domain.model.IntervalTimeState
 import com.example.intervaltimer.future_intervalTimer.domain.service.IntervalTimeService
 import com.example.intervaltimer.future_intervalTimer.domain.service.ServiceHelper
+import com.example.intervaltimer.future_intervalTimer.present.home.ChangeTimerValueEnum
 import com.example.intervaltimer.future_intervalTimer.present.home.HomeEvent
 import com.example.intervaltimer.future_intervalTimer.present.home.HomeViewModel
+import com.example.intervaltimer.future_intervalTimer.present.home.TimerOptionEnum
 import com.example.intervaltimer.future_intervalTimer.present.home.compose.CurrentChoosePresentation
 import com.example.intervaltimer.future_intervalTimer.present.home.compose.HomeButton
 import com.example.intervaltimer.future_intervalTimer.present.util.compose.OwnNavigationDrawer
@@ -269,32 +271,60 @@ fun Home(
                     item {
                         CurrentChoosePresentation(
                             time = state.timer.startTime,
-                            text = stringResource(id = R.string.TimeToPrepare)
-                        ) {
-                            option = ChooseOptionEnum.PrepareTime
-                            timerState.show()
-                        }
+                            text = stringResource(id = R.string.TimeToPrepare),
+                            onClickMinus = {
+                                viewModel.onEvent(HomeEvent.ChangeTimerValue(TimerOptionEnum.Prepare, ChangeTimerValueEnum.Subtract))
+                            },
+                            onClickPlus = {
+                                viewModel.onEvent(HomeEvent.ChangeTimerValue(TimerOptionEnum.Prepare, ChangeTimerValueEnum.Add))
+                            },
+                            onClick = {
+                                option = ChooseOptionEnum.PrepareTime
+                                timerState.show()
+                            }
+                        )
                         CurrentChoosePresentation(
                             time = state.timer.roundTime,
-                            text = stringResource(id = R.string.RoundTime)
-                        ) {
-                            option = ChooseOptionEnum.RoundTime
-                            timerState.show()
-                        }
+                            text = stringResource(id = R.string.RoundTime),
+                            onClickMinus = {
+                                viewModel.onEvent(HomeEvent.ChangeTimerValue(TimerOptionEnum.RoundTime, ChangeTimerValueEnum.Subtract))
+                            },
+                            onClickPlus = {
+                                viewModel.onEvent(HomeEvent.ChangeTimerValue(TimerOptionEnum.RoundTime, ChangeTimerValueEnum.Add))
+                            },
+                            onClick = {
+                                option = ChooseOptionEnum.RoundTime
+                                timerState.show()
+                            }
+                        )
                         CurrentChoosePresentation(
                             time = state.timer.delay,
-                            text = stringResource(id = R.string.BreakTime)
-                        ) {
-                            option = ChooseOptionEnum.BreakTime
-                            timerState.show()
-                        }
+                            text = stringResource(id = R.string.BreakTime),
+                            onClickMinus = {
+                                viewModel.onEvent(HomeEvent.ChangeTimerValue(TimerOptionEnum.Break, ChangeTimerValueEnum.Subtract))
+                            },
+                            onClickPlus = {
+                                viewModel.onEvent(HomeEvent.ChangeTimerValue(TimerOptionEnum.Break, ChangeTimerValueEnum.Add))
+                            },
+                            onClick = {
+                                option = ChooseOptionEnum.BreakTime
+                                timerState.show()
+                            }
+                        )
                         CurrentChoosePresentation(
                             time = state.timer.rounds,
                             text = stringResource(id = R.string.Rounds),
-                            isTimer = false
-                        ) {
-                            roundState.show()
-                        }
+                            isTimer = false,
+                            onClickMinus = {
+                                viewModel.onEvent(HomeEvent.ChangeTimerValue(TimerOptionEnum.Rounds, ChangeTimerValueEnum.Subtract))
+                            },
+                            onClickPlus = {
+                                viewModel.onEvent(HomeEvent.ChangeTimerValue(TimerOptionEnum.Rounds, ChangeTimerValueEnum.Add))
+                            },
+                            onClick = {
+                                roundState.show()
+                            }
+                        )
                     }
                 }
             }
