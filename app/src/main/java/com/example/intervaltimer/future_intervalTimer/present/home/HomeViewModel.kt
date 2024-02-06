@@ -32,8 +32,8 @@ class HomeViewModel @Inject constructor(
     private val ownIntervalTimeUseCases: OwnIntervalTimeUseCases
 ): ViewModel() {
 
-    private val _state = mutableStateOf(HomeState())
-    val state: State<HomeState> = _state
+    private val _state = MutableStateFlow(HomeState())
+    val state = _state.asStateFlow()
 
 
     private val _eventFlow = MutableSharedFlow<UiEvent>()
@@ -47,48 +47,43 @@ class HomeViewModel @Inject constructor(
         when(event) {
             is HomeEvent.InsertOwnIntervalTime -> {
                 viewModelScope.launch {
-                    if(_state.value.timerExist == false) {
-                        ownIntervalTimeUseCases.insertOwnIntervalTimeUseCase.invoke(_state.value.timer.toOwnIntervalTimer())
-                        _state.value.ownIntervalTimes.add(_state.value.timer.toOwnIntervalTimer())
-                        _eventFlow.emit(UiEvent.ShowToast(R.string.YouAddNewIntervalTime))
-                    } else if (_state.value.timerExist == null) {
-                        _eventFlow.emit(UiEvent.ShowToast(R.string.ProblemWithAddingNewTimer))
-                    }else {
-                        _eventFlow.emit(UiEvent.ShowToast(R.string.IntervalTimeLikeThatExistAtNow))
+                    when (_state.value.timerExist) {
+                        false -> {
+                            ownIntervalTimeUseCases.insertOwnIntervalTimeUseCase.invoke(_state.value.timer.toOwnIntervalTimer())
+                            _state.value.ownIntervalTimes.add(_state.value.timer.toOwnIntervalTimer())
+                            _eventFlow.emit(UiEvent.ShowToast(R.string.YouAddNewIntervalTime))
+                        }
+                        null -> {
+                            _eventFlow.emit(UiEvent.ShowToast(R.string.ProblemWithAddingNewTimer))
+                        }
+                        else -> {
+                            _eventFlow.emit(UiEvent.ShowToast(R.string.IntervalTimeLikeThatExistAtNow))
+                        }
                     }
                 }
             }
+            is HomeEvent.SetValue -> {
+                val timerValue = when (event.timerType) {
+                    TimerOptionEnum.Prepare -> {
+                        _state.value.timer.copy(startTime = event.time.toInt())
+                    }
 
-            is HomeEvent.setBreakTime -> {
-                _state.value = state.value.copy(
-                    timer = state.value.timer.copy(
-                        delay = event.time.toInt()
-                    )
-                )
-                overallTimer()
-            }
-            is HomeEvent.setPrepareTime -> {
-                _state.value = state.value.copy(
-                    timer = state.value.timer.copy(
-                        startTime = event.time.toInt()
-                    )
-                )
-                overallTimer()
-            }
-            is HomeEvent.setRoundTime -> {
-                _state.value = state.value.copy(
-                    timer = state.value.timer.copy(
-                        roundTime = event.time.toInt()
-                    )
-                )
-                overallTimer()
-            }
-            is HomeEvent.setRounds -> {
-                _state.value = state.value.copy(
-                   timer = state.value.timer.copy(
-                       rounds = event.time.toInt()
-                   )
-                )
+                    TimerOptionEnum.RoundTime -> {
+                        _state.value.timer.copy(roundTime = event.time.toInt())
+                    }
+
+                    TimerOptionEnum.Break -> {
+                        _state.value.timer.copy(delay = event.time.toInt())
+                    }
+
+                    TimerOptionEnum.Rounds -> {
+                        _state.value.timer.copy(rounds = event.time.toInt())
+                    }
+                }
+
+                _state.update { it.copy(
+                    timer = timerValue
+                ) }
                 overallTimer()
             }
             is HomeEvent.ChangeTimerValue -> {
@@ -96,48 +91,61 @@ class HomeViewModel @Inject constructor(
 
                 when (event.timerValue) {
                     ChangeTimerValueEnum.Add -> {
-                        when(event.timerType) {
+                        timerValue = when(event.timerType) {
                             TimerOptionEnum.Prepare -> {
-                                timerValue = timerValue.copy(startTime = changeTimerValue(timerValue.startTime, ChangeTimerValueEnum.Add))
+                                timerValue.copy(startTime = changeTimerValue(timerValue.startTime, ChangeTimerValueEnum.Add))
                             }
+
                             TimerOptionEnum.RoundTime -> {
-                                timerValue = timerValue.copy(roundTime = changeTimerValue(timerValue.roundTime, ChangeTimerValueEnum.Add))
+                                timerValue.copy(roundTime = changeTimerValue(timerValue.roundTime, ChangeTimerValueEnum.Add))
                             }
+
                             TimerOptionEnum.Break -> {
-                                timerValue = timerValue.copy(delay = changeTimerValue(timerValue.delay, ChangeTimerValueEnum.Add))
+                                timerValue.copy(delay = changeTimerValue(timerValue.delay, ChangeTimerValueEnum.Add))
                             }
+
                             TimerOptionEnum.Rounds -> {
-                                timerValue = timerValue.copy(rounds = timerValue.rounds + 1)
+                                timerValue.copy(rounds = timerValue.rounds + 1)
                             }
                         }
                     }
                     ChangeTimerValueEnum.Subtract -> {
-                        when(event.timerType) {
+                        timerValue = when(event.timerType) {
                             TimerOptionEnum.Prepare -> {
-                                if (timerValue.startTime > 0) {
-                                    timerValue = timerValue.copy(startTime = changeTimerValue(timerValue.startTime, ChangeTimerValueEnum.Subtract))
+                                if (timerValue.startTime > 5) {
+                                    timerValue.copy(startTime = changeTimerValue(timerValue.startTime, ChangeTimerValueEnum.Subtract))
+                                } else {
+                                    timerValue.copy(startTime = 0)
                                 }
                             }
                             TimerOptionEnum.RoundTime -> {
-                                if (timerValue.roundTime > 5) {
-                                    timerValue = timerValue.copy(roundTime = changeTimerValue(timerValue.roundTime, ChangeTimerValueEnum.Subtract))
+                                if (timerValue.roundTime > 10) {
+                                    timerValue.copy(roundTime = changeTimerValue(timerValue.roundTime, ChangeTimerValueEnum.Subtract))
+                                } else {
+                                    timerValue.copy(roundTime = 5)
                                 }
                             }
                             TimerOptionEnum.Break -> {
-                                if (timerValue.delay > 5) {
-                                    timerValue = timerValue.copy(delay = changeTimerValue(timerValue.delay, ChangeTimerValueEnum.Subtract))
+                                if (timerValue.delay > 10) {
+                                    timerValue.copy(delay = changeTimerValue(timerValue.delay, ChangeTimerValueEnum.Subtract))
+                                }else {
+                                    timerValue.copy(delay = 5)
                                 }
                             }
                             TimerOptionEnum.Rounds -> {
                                 if (timerValue.rounds > 1) {
-                                    timerValue = timerValue.copy(rounds = timerValue.rounds - 1)
+                                    timerValue.copy(rounds = timerValue.rounds - 1)
+                                } else {
+                                    timerValue.copy(rounds = 1)
                                 }
                             }
                         }
                     }
                 }
 
-                _state.value = state.value.copy(timer = timerValue)
+                _state.update { it.copy(
+                    timer = timerValue
+                ) }
                 overallTimer()
             }
         }
@@ -147,9 +155,9 @@ class HomeViewModel @Inject constructor(
     private fun getAllOwnIntervalTimes() {
         viewModelScope.launch {
             ownIntervalTimeUseCases.getAllOwnIntervalTimesUseCase.invoke().collectLatest { ownTimers ->
-                _state.value = _state.value.copy(
+                _state.update { it.copy(
                     ownIntervalTimes = ownTimers.toMutableList()
-                )
+                ) }
 
                 isExistTimer()
             }
@@ -164,9 +172,9 @@ class HomeViewModel @Inject constructor(
                 ownTimer.toTimer() == _state.value.timer
             }.isNotEmpty()
 
-            _state.value = state.value.copy(
+            _state.update { it.copy(
                 timerExist = isExist
-            )
+            ) }
         }
     }
 
@@ -178,9 +186,9 @@ class HomeViewModel @Inject constructor(
         //Add result of all delays
         overallTime += _state.value.timer.delay * (_state.value.timer.rounds - 1)
 
-        _state.value = state.value.copy(
+        _state.update { it.copy(
             overallTime = overallTime
-        )
+        ) }
     }
 
     private fun changeTimerValue(currentValue: Int, timerValue: ChangeTimerValueEnum): Int {

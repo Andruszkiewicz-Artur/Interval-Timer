@@ -73,7 +73,7 @@ fun Home(
     drawerState: DrawerState
 ) {
     val context = LocalContext.current
-    val state = viewModel.state.value
+    val state = viewModel.state.collectAsState().value
 
     val timerState = rememberUseCaseState()
     val roundState = rememberUseCaseState()
@@ -101,18 +101,17 @@ fun Home(
             onPositiveClick = {
                 when (option) {
                     ChooseOptionEnum.PrepareTime -> {
-                        viewModel.onEvent(HomeEvent.setPrepareTime(it))
+                        viewModel.onEvent(HomeEvent.SetValue(TimerOptionEnum.Prepare, it))
                     }
 
                     ChooseOptionEnum.RoundTime -> {
-                        viewModel.onEvent(HomeEvent.setRoundTime(it))
+                        viewModel.onEvent(HomeEvent.SetValue(TimerOptionEnum.RoundTime, it))
                     }
 
                     ChooseOptionEnum.BreakTime -> {
-                        viewModel.onEvent(HomeEvent.setBreakTime(it))
+                        viewModel.onEvent(HomeEvent.SetValue(TimerOptionEnum.Break, it))
                     }
-
-                    null -> {}
+                    else -> {}
                 }
                 option = null
             }
@@ -130,7 +129,7 @@ fun Home(
                 text = stringResource(id = R.string.Apply)
             ),
             onPositiveClick = {
-                viewModel.onEvent(HomeEvent.setRounds(it))
+                viewModel.onEvent(HomeEvent.SetValue(TimerOptionEnum.Break, it))
             }
         ),
         config = DurationConfig(

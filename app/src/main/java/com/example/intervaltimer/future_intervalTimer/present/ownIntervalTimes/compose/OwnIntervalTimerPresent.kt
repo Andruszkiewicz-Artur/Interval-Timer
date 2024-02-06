@@ -17,6 +17,7 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -49,7 +50,7 @@ fun OwnIntervalTimePresent(
     val context = LocalContext.current
     val scope = rememberCoroutineScope()
 
-    val ownIntervalTimes = viewModel.state.value.ownIntervalTimes
+    val state = viewModel.state.collectAsState().value
 
     LaunchedEffect(key1 = true) {
         viewModel.eventFlow.collectLatest { event ->
@@ -96,14 +97,14 @@ fun OwnIntervalTimePresent(
                         .fillMaxSize()
                         .padding(padding)
                 ) {
-                    if(ownIntervalTimes.isNotEmpty()) {
+                    if(state.ownIntervalTimes.isNotEmpty()) {
                         LazyColumn(
                             modifier = Modifier
                                 .fillMaxSize()
                                 .padding(20.dp),
                             verticalArrangement = Arrangement.spacedBy(8.dp)
                         ) {
-                            items(ownIntervalTimes) { ownIntervalTime ->
+                            items(state.ownIntervalTimes) { ownIntervalTime ->
                                 ExistingTimerPresentation(
                                     timer = ownIntervalTime.toTimer(),
                                     onClickStart = {

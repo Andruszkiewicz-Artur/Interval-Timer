@@ -15,6 +15,7 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
@@ -41,7 +42,7 @@ fun HistoryPresent(
     drawerState: DrawerState
 ) {
     val context = LocalContext.current
-    val intervalTimes = viewModel.state.value.intervalTimes
+    val state = viewModel.state.collectAsState().value
     val scope = rememberCoroutineScope()
 
     OwnNavigationDrawer(
@@ -74,14 +75,14 @@ fun HistoryPresent(
                         .fillMaxSize()
                         .padding(padding)
                 ) {
-                    if(intervalTimes.isNotEmpty()) {
+                    if(state.intervalTimes.isNotEmpty()) {
                         LazyColumn(
                             modifier = Modifier
                                 .fillMaxSize()
                                 .padding(20.dp),
                             verticalArrangement = Arrangement.spacedBy(8.dp)
                         ) {
-                            items(intervalTimes) { intervalTimer ->
+                            items(state.intervalTimes) { intervalTimer ->
                                 ExistingTimerPresentation(
                                     timer = intervalTimer.toTimer(),
                                     onClickStart = {

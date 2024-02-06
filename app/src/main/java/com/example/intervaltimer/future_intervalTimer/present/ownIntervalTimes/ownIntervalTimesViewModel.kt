@@ -10,9 +10,12 @@ import com.example.intervaltimer.future_intervalTimer.domain.use_case.ownInterva
 import com.example.intervaltimer.future_intervalTimer.present.ownIntervalTimes.compose.OwnIntervalTimeEvent
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableSharedFlow
+import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asSharedFlow
+import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
+import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
@@ -21,8 +24,8 @@ class ownIntervalTimesViewModel @Inject constructor(
     private var ownIntervalTimeUseCases: OwnIntervalTimeUseCases
 ): ViewModel() {
 
-    private val _state = mutableStateOf(OwnIntervalTimeState())
-    val state: State<OwnIntervalTimeState> = _state
+    private val _state = MutableStateFlow(OwnIntervalTimeState())
+    val state = _state.asStateFlow()
 
     private val _eventFlow = MutableSharedFlow<UiEvent>()
     val eventFlow =_eventFlow.asSharedFlow()
@@ -47,9 +50,9 @@ class ownIntervalTimesViewModel @Inject constructor(
 
     private fun getAllOwnIntervalTimes() {
         ownIntervalTimeUseCases.getAllOwnIntervalTimesUseCase.invoke().onEach { ownIntervalTimes ->
-            _state.value = state.value.copy(
+            _state.update { it.copy(
                 ownIntervalTimes = ownIntervalTimes
-            )
+            ) }
         }.launchIn(viewModelScope)
     }
 }
