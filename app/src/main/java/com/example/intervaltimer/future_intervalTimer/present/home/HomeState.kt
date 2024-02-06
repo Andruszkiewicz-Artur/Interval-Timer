@@ -10,7 +10,8 @@ data class HomeState(
         startTime = 15,
         roundTime = 180,
         delay = 60,
-        rounds = 5
+        rounds = 5,
+        name = ""
     ),
     val timerExist: Boolean? = null
 )

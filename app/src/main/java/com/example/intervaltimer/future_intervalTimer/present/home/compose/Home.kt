@@ -15,9 +15,12 @@ import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.foundation.text.KeyboardActions
+import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Bookmark
 import androidx.compose.material.icons.filled.BookmarkBorder
+import androidx.compose.material.icons.filled.Edit
 import androidx.compose.material.icons.filled.History
 import androidx.compose.material.icons.filled.Menu
 import androidx.compose.material.icons.filled.Timer
@@ -28,11 +31,16 @@ import androidx.compose.material.icons.outlined.StarBorder
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
+import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.platform.LocalFocusManager
+import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.input.ImeAction
+import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
@@ -63,7 +71,9 @@ import com.maxkeppeler.sheets.duration.models.DurationSelection
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 
-@OptIn(ExperimentalMaterial3Api::class, ExperimentalAnimationApi::class)
+@OptIn(ExperimentalMaterial3Api::class, ExperimentalAnimationApi::class,
+    ExperimentalComposeUiApi::class
+)
 @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
 @Composable
 fun Home(
@@ -72,6 +82,9 @@ fun Home(
     service: IntervalTimeService,
     drawerState: DrawerState
 ) {
+    val keyboardController = LocalSoftwareKeyboardController.current
+    val focusRequesterManager = LocalFocusManager.current
+
     val context = LocalContext.current
     val state = viewModel.state.collectAsState().value
 
@@ -143,7 +156,7 @@ fun Home(
                 is UiEvent.ShowToast -> {
                     Toast.makeText(
                         context,
-                        context.getString(event.message),
+                        context.getString(event.message) + "!",
                         Toast.LENGTH_LONG
                     ).show()
                 }
@@ -268,6 +281,35 @@ fun Home(
                         .padding(padding)
                 ) {
                     item {
+                        OutlinedTextField(
+                            value = state.timer.name,
+                            onValueChange = { newName ->
+                                viewModel.onEvent(HomeEvent.SetName(newName))
+                            },
+                            singleLine = true,
+                            trailingIcon = {
+                                Icon(
+                                    imageVector = Icons.Filled.Edit,
+                                    contentDescription = null
+                                )
+                            },
+                            label = {
+                                Text(text = stringResource(id = R.string.Name))
+                            },
+                            keyboardOptions = KeyboardOptions.Default.copy(
+                                keyboardType = KeyboardType.Text,
+                                imeAction = ImeAction.Done
+                            ),
+                            keyboardActions = KeyboardActions(
+                                onDone = {
+                                    keyboardController?.hide()
+                                    focusRequesterManager.clearFocus()
+                                }
+                            ),
+                            modifier = Modifier
+                                .fillMaxWidth(0.8f)
+                        )
+
                         CurrentChoosePresentation(
                             time = state.timer.startTime,
                             text = stringResource(id = R.string.TimeToPrepare),
@@ -324,6 +366,8 @@ fun Home(
                                 roundState.show()
                             }
                         )
+
+                        Spacer(modifier = Modifier.height(100.dp))
                     }
                 }
             }

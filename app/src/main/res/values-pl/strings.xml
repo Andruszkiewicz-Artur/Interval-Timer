@@ -7,6 +7,8 @@
     <string name="Start">Rozpocznij</string>
     <string name="Set">Seria</string>
     <string name="Sets">Serie</string>
+    <string name="Name">Imię</string>
+    <string name="RequiredName">Wymagane imię</string>
     <string name="Apply">Zastosuj</string>
     <string name="YouAddNewIntervalTime">Dodano nowy czas interwału!</string>
     <string name="ProblemWithAddingNewTimer">Problem z dodaniem nowego timera!</string>

@@ -11,6 +11,9 @@ data class IntervalTime(
     @ColumnInfo(name = "id")
     var id: Int? = null,
 
+    @ColumnInfo(name = "name")
+    var name: String,
+
     @ColumnInfo(name = "prepareTime")
     var prepareTime: Int,
 
@@ -31,7 +34,8 @@ data class IntervalTime(
             startTime = this.prepareTime,
             roundTime = this.roundTime,
             delay = this.breakTime,
-            rounds = this.roundsCount
+            rounds = this.roundsCount,
+            name = this.name
         )
     }
 }

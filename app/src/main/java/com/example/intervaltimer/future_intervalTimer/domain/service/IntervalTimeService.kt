@@ -24,7 +24,6 @@ import com.example.intervaltimer.core.constants.Constants.NOTIFICATION_ID
 import com.example.intervaltimer.core.extensions.formatTime
 import com.example.intervaltimer.core.extensions.pad
 import com.example.intervaltimer.core.global.globalTimer
-import com.example.intervaltimer.future_intervalTimer.domain.mappers.toIntervalTime
 import com.example.intervaltimer.future_intervalTimer.domain.model.IntervalTimeState
 import com.example.intervaltimer.future_intervalTimer.domain.model.TimerModel
 import com.example.intervaltimer.future_intervalTimer.domain.model.TimerStateEnum
@@ -36,7 +35,6 @@ import kotlinx.coroutines.launch
 import java.util.Timer
 import javax.inject.Inject
 import kotlin.concurrent.fixedRateTimer
-import kotlin.coroutines.CoroutineContext
 import kotlin.time.Duration.Companion.ZERO
 import kotlin.time.Duration.Companion.seconds
 import kotlin.time.DurationUnit

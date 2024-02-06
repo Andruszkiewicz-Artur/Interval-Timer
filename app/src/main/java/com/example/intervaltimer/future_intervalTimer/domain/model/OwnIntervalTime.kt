@@ -10,6 +10,9 @@ data class OwnIntervalTime(
     @ColumnInfo(name = "id")
     var id: Int? = null,
 
+    @ColumnInfo(name = "name")
+    var name: String,
+
     @ColumnInfo(name = "prepareTime")
     var prepareTime: Int,
 
@@ -27,9 +30,8 @@ data class OwnIntervalTime(
             startTime = this.prepareTime,
             roundTime = this.roundTime,
             delay = this.breakTime,
-            rounds = this.roundsCount
+            rounds = this.roundsCount,
+            name = this.name
         )
     }
 }
-
-class InvalidOwnIntervalTime(message: String): Exception(message)

@@ -7,6 +7,8 @@
     <string name="Start">Starten</string>
     <string name="Set">Satz</string>
     <string name="Sets">Sätze</string>
+    <string name="Name">Name</string>
+    <string name="RequiredName">Erforderlicher Name</string>po
     <string name="Apply">Anwenden</string>
     <string name="YouAddNewIntervalTime">Du hast eine neue Intervallzeit hinzugefügt!</string>
     <string name="ProblemWithAddingNewTimer">Problem beim Hinzufügen eines neuen Timers!</string>

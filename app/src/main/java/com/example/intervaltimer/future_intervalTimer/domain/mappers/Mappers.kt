@@ -7,19 +7,10 @@ import java.util.Calendar
 
 fun OwnIntervalTime.toTimerModel(): TimerModel {
     return TimerModel(
+        name,
         prepareTime,
         roundTime,
         breakTime,
         roundsCount
-    )
-}
-
-fun TimerModel.toIntervalTime(): IntervalTime {
-    return IntervalTime(
-        prepareTime = startTime,
-        roundTime = roundTime,
-        breakTime = delay,
-        roundsCount = rounds,
-        date = Calendar.getInstance().timeInMillis
     )
 }

@@ -46,19 +46,25 @@ class HomeViewModel @Inject constructor(
     fun onEvent(event: HomeEvent) {
         when(event) {
             is HomeEvent.InsertOwnIntervalTime -> {
-                viewModelScope.launch {
-                    when (_state.value.timerExist) {
-                        false -> {
-                            ownIntervalTimeUseCases.insertOwnIntervalTimeUseCase.invoke(_state.value.timer.toOwnIntervalTimer())
-                            _state.value.ownIntervalTimes.add(_state.value.timer.toOwnIntervalTimer())
-                            _eventFlow.emit(UiEvent.ShowToast(R.string.YouAddNewIntervalTime))
+                if (_state.value.timer.name.isNotBlank()) {
+                    viewModelScope.launch {
+                        when (_state.value.timerExist) {
+                            false -> {
+                                ownIntervalTimeUseCases.insertOwnIntervalTimeUseCase.invoke(_state.value.timer.toOwnIntervalTimer())
+                                _state.value.ownIntervalTimes.add(_state.value.timer.toOwnIntervalTimer())
+                                _eventFlow.emit(UiEvent.ShowToast(R.string.YouAddNewIntervalTime))
+                            }
+                            null -> {
+                                _eventFlow.emit(UiEvent.ShowToast(R.string.ProblemWithAddingNewTimer))
+                            }
+                            else -> {
+                                _eventFlow.emit(UiEvent.ShowToast(R.string.IntervalTimeLikeThatExistAtNow))
+                            }
                         }
-                        null -> {
-                            _eventFlow.emit(UiEvent.ShowToast(R.string.ProblemWithAddingNewTimer))
-                        }
-                        else -> {
-                            _eventFlow.emit(UiEvent.ShowToast(R.string.IntervalTimeLikeThatExistAtNow))
-                        }
+                    }
+                } else {
+                    viewModelScope.launch {
+                        _eventFlow.emit(UiEvent.ShowToast(R.string.RequiredName))
                     }
                 }
             }
@@ -147,6 +153,12 @@ class HomeViewModel @Inject constructor(
                     timer = timerValue
                 ) }
                 overallTimer()
+            }
+
+            is HomeEvent.SetName -> {
+                _state.update { it.copy(
+                    timer = it.timer.copy(name = event.value)
+                ) }
             }
         }
         isExistTimer()

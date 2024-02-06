@@ -8,6 +8,8 @@
     <string name="Start">Démarrer</string>
     <string name="Set">Série</string>
     <string name="Sets">Séries</string>
+    <string name="Name">Nom</string>
+    <string name="RequiredName">Nom requis</string>
     <string name="YouAddNewIntervalTime">Vous avez ajouté un nouveau temps d`intervalle !</string>
     <string name="ProblemWithAddingNewTimer">Problème lors de l`ajout du nouveau minuteur !</string>
     <string name="IntervalTimeLikeThatExistAtNow">Un temps d`intervalle similaire existe déjà !</string>

@@ -3,6 +3,7 @@ package com.example.intervaltimer.future_intervalTimer.domain.model
 import java.util.*
 
 data class TimerModel(
+    val name: String,
     val startTime: Int,
     val roundTime: Int,
     val delay: Int,
@@ -14,7 +15,8 @@ data class TimerModel(
             roundTime = this.roundTime,
             breakTime = this.delay,
             roundsCount = this.rounds,
-            date = System.currentTimeMillis()
+            date = System.currentTimeMillis(),
+            name = this.name
         )
     }
 
@@ -23,7 +25,8 @@ data class TimerModel(
             prepareTime = this.startTime,
             breakTime = this.delay,
             roundTime = this.roundTime,
-            roundsCount = this.rounds
+            roundsCount = this.rounds,
+            name = this.name
         )
     }
 }

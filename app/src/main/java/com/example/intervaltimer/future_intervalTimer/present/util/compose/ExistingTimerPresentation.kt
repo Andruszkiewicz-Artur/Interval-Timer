@@ -53,7 +53,7 @@ fun ExistingTimerPresentation(
                     .fillMaxWidth()
             ) {
                 Text(
-                    text = "Unknown Name",
+                    text = timer.name,
                     style = MaterialTheme.typography.headlineMedium
                 )
                 
