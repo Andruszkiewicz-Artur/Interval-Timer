@@ -118,10 +118,10 @@ class HomeViewModel @Inject constructor(
                     ChangeTimerValueEnum.Subtract -> {
                         timerValue = when(event.timerType) {
                             TimerOptionEnum.Prepare -> {
-                                if (timerValue.startTime > 5) {
+                                if (timerValue.startTime > 10) {
                                     timerValue.copy(startTime = changeTimerValue(timerValue.startTime, ChangeTimerValueEnum.Subtract))
                                 } else {
-                                    timerValue.copy(startTime = 0)
+                                    timerValue.copy(startTime = 5)
                                 }
                             }
                             TimerOptionEnum.RoundTime -> {
